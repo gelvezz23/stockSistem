@@ -18,10 +18,7 @@ const Menu = () => {
       <h4>Usuarios</h4>
       <ul>
         <li>
-          <NavLink to="providers/create">Crear Auxiliar</NavLink>
-        </li>
-        <li>
-          <NavLink to="providers/create">Crear Tecnico</NavLink>
+          <NavLink to="users/create">Crear Usuario</NavLink>
         </li>
       </ul>
       <br />

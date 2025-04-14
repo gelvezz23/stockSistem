@@ -1,4 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { DocumentData, DocumentReference } from "firebase/firestore";
+import {
+  IUser,
+  registerUserInFirestore,
+} from "../firebase/users/Register/users";
 import { auth } from "./../firebase";
 import {
   createUserWithEmailAndPassword,
@@ -9,16 +14,15 @@ import {
 const createUser = async ({
   name,
   email,
-  password,
-}: {
-  name: string;
-  email: string;
-  password: string;
-}): Promise<{
-  user?: User;
+  password = "",
+  userType,
+}: IUser): Promise<{
+  user?: {
+    user: User;
+    data: DocumentReference<DocumentData, DocumentData> | undefined | null;
+  };
   error?: { code: string; message: string } | unknown | any;
 }> => {
-  console.log({ name, email, password });
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -28,7 +32,18 @@ const createUser = async ({
     const { user } = userCredential;
     await updateProfile(user, { displayName: name });
 
-    return { user, error: undefined };
+    const { data, error } = await registerUserInFirestore({
+      name,
+      email,
+      userType,
+      password,
+      uid: user.uid,
+    });
+
+    if (error) {
+      return { user: undefined, error };
+    }
+    return { user: { user, data }, error: undefined };
   } catch (error) {
     return { user: undefined, error };
   }

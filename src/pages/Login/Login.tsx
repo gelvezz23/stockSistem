@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import getUser from "../../utils/auth/getUser";
 import ErrorComponent from "../../components/ErrorComponent";
 import { useSessionStorage } from "../../utils/hook/useSessionStorage";
@@ -67,6 +67,7 @@ const Login = () => {
         <button className={button} type="submit">
           Iniciar sesion
         </button>
+        <NavLink to="/forgotPassword">Olvide mi contrasena.</NavLink>
         {err && <ErrorComponent err={err} />}
       </form>
     </section>

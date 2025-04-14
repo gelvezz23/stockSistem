@@ -7,6 +7,7 @@ import { useSessionStorage } from "../utils/hook/useSessionStorage";
 import Dashboard from "../pages/dashboard";
 import { CreateProducts } from "../pages/dashboard/products";
 import { CreateProvider } from "../pages/dashboard/providers";
+import ForgotPasswordForm from "../pages/ForgotPassword";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -41,6 +42,7 @@ export const routes = createBrowserRouter([
             element: <Login />,
           },
           { path: "Registro", element: <Register /> },
+          { path: "forgotPassword", element: <ForgotPasswordForm /> },
         ],
       },
       {

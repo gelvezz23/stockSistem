@@ -13,7 +13,7 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    userType: "cliente", // Valor por defecto
+    userType: "cliente",
   });
   const [err, setError] = useState("");
   const { section, form, label, input, button } = styles;
@@ -78,7 +78,7 @@ const Register = () => {
           value={valueForm.userType}
           onChange={handleValue}
         >
-          <option value="auxiliar de ventas">Auxiliar de Ventas</option>
+          <option value="auxiliar_ventas">Auxiliar de Ventas</option>
           <option value="tecnico">Técnico</option>
           <option value="cliente">Cliente</option>
         </select>

@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main style={{ paddingTop: "3rem", height: "100vh" }}>
         <Outlet />
       </main>
       <Footer />
