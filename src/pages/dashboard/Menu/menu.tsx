@@ -14,6 +14,17 @@ const Menu = () => {
           <NavLink to="providers/create">Crear Proveedor</NavLink>
         </li>
       </ul>
+      <br />
+      <h4>Usuarios</h4>
+      <ul>
+        <li>
+          <NavLink to="providers/create">Crear Auxiliar</NavLink>
+        </li>
+        <li>
+          <NavLink to="providers/create">Crear Tecnico</NavLink>
+        </li>
+      </ul>
+      <br />
       <h4>Productos</h4>
       <ul>
         <li>

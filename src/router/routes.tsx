@@ -58,6 +58,10 @@ export const routes = createBrowserRouter([
                 path: "providers/create",
                 element: <CreateProvider />,
               },
+              {
+                path: "users/create",
+                element: <Register />,
+              },
             ],
           },
         ],

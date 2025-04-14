@@ -13,6 +13,7 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
+    userType: "cliente", // Valor por defecto
   });
   const [err, setError] = useState("");
   const { section, form, label, input, button } = styles;
@@ -68,6 +69,19 @@ const Register = () => {
           value={valueForm.password}
           onChange={handleValue}
         />
+
+        {/* Nuevo select para el tipo de usuario */}
+        <label className={label}>Tipo de Usuario</label>
+        <select
+          className={input}
+          name="userType"
+          value={valueForm.userType}
+          onChange={handleValue}
+        >
+          <option value="auxiliar de ventas">Auxiliar de Ventas</option>
+          <option value="tecnico">Técnico</option>
+          <option value="cliente">Cliente</option>
+        </select>
 
         <button className={button} type="submit">
           Registrarse
