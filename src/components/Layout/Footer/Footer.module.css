@@ -1,9 +1,11 @@
 .footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    position: fixed; /* Opcional: para fijar el footer al final de la página */
-    bottom: 0; /* Opcional: para fijar el footer al final de la página */
-    width: 100%; /* Opcional: para que el footer ocupe todo el ancho */
-  }
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: #333333ab;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  position: fixed; /* Opcional: para fijar el footer al final de la página */
+  bottom: 0; /* Opcional: para fijar el footer al final de la página */
+  width: 100%; /* Opcional: para que el footer ocupe todo el ancho */
+}

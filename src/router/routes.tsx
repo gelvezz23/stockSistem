@@ -72,6 +72,7 @@ export const routes = createBrowserRouter([
               },
               { path: "users/list", element: <UsersList /> },
               { path: "users/forgotPassword", element: <ForgotPasswordForm /> },
+              { path: "alerts", element: <h1>Alert</h1> },
             ],
           },
         ],
