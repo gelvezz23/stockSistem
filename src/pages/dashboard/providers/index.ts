@@ -1,3 +1,3 @@
-import CreateProvider from "./create";
+import ProveedorList from "./create";
 
-export { CreateProvider };
+export { ProveedorList };

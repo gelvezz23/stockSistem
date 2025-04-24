@@ -6,8 +6,10 @@ import Register from "../pages/Register";
 import { useSessionStorage } from "../utils/hook/useSessionStorage";
 import Dashboard from "../pages/dashboard";
 import { CreateProducts } from "../pages/dashboard/products";
-import { CreateProvider } from "../pages/dashboard/providers";
+import { ProveedorList } from "../pages/dashboard/providers";
 import ForgotPasswordForm from "../pages/ForgotPassword";
+import { UsersList } from "../pages/usersList/UsersList";
+import { ProductList } from "../pages/dashboard/products/ProductList/ProductList";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -25,6 +27,7 @@ export const PrivateRoute = () => {
   return <Navigate to="/" />;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -42,7 +45,6 @@ export const routes = createBrowserRouter([
             element: <Login />,
           },
           { path: "Registro", element: <Register /> },
-          { path: "forgotPassword", element: <ForgotPasswordForm /> },
         ],
       },
       {
@@ -54,16 +56,22 @@ export const routes = createBrowserRouter([
             children: [
               {
                 path: "products/create",
-                element: <CreateProducts />,
+                element: <CreateProducts productData={undefined} />,
+              },
+              {
+                path: "products/viewStock",
+                element: <ProductList />,
               },
               {
                 path: "providers/create",
-                element: <CreateProvider />,
+                element: <ProveedorList />,
               },
               {
                 path: "users/create",
                 element: <Register />,
               },
+              { path: "users/list", element: <UsersList /> },
+              { path: "users/forgotPassword", element: <ForgotPasswordForm /> },
             ],
           },
         ],

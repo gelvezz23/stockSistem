@@ -1,0 +1,122 @@
+/* Estilos generales del formulario */
+#productoForm {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: calc(100% - 12px);
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* Para que padding y border no aumenten el ancho total */
+  font-size: 16px;
+  color: #555;
+}
+
+textarea {
+  resize: vertical; /* Permite redimensionar verticalmente */
+}
+
+select {
+  appearance: none; /* Oculta la flecha por defecto en algunos navegadores */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 1em;
+  padding-right: 30px; /* Espacio para la flecha */
+}
+
+select::-ms-expand {
+  display: none; /* Oculta la flecha en IE */
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilos específicos para la vista previa de la imagen */
+.image-preview-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.image-preview-container label {
+  font-style: italic;
+  color: #777;
+}
+
+.image-preview {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+#mensajeNoImagen {
+  color: #999;
+  margin-top: 5px;
+}
+
+/* Estilos para mensajes de error (si los agregas) */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Adaptación para pantallas más pequeñas */
+@media (max-width: 768px) {
+  #productoForm {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select,
+  button[type="submit"] {
+    font-size: 14px;
+  }
+}

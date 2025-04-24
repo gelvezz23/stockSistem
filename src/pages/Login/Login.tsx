@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
 import { NavLink, useNavigate } from "react-router";
-import getUser from "../../utils/auth/getUser";
 import ErrorComponent from "../../components/ErrorComponent";
 import { useSessionStorage } from "../../utils/hook/useSessionStorage";
-import { getRole } from "../../utils/firebase/role";
+import useLogin from "../../utils/hook/useLogin";
 const Login = () => {
+  const { login, user, loading, error, isLoggedIn } = useLogin();
+
   const { setValue } = useSessionStorage("user", null);
   const navigate = useNavigate();
   const [err, setError] = useState("");
@@ -24,16 +25,15 @@ const Login = () => {
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (!valueForm.email || !valueForm.password) {
-      alert("Por favor no envies campos vacios");
+      setError("Por favor no envies campos vacios");
     } else {
-      const { user, error } = await getUser(valueForm);
-      const thereIsAdmin = await getRole({ email: valueForm.email });
-
+      await login({ ...valueForm });
       if (error) {
-        setError(error?.code || "");
+        setError(error || "");
       }
-      if (user) {
-        setValue({ ...user, thereIsAdmin });
+      if (user && isLoggedIn) {
+        const thereIsAdmin = user?.rol_id === 1;
+        setValue({ user, thereIsAdmin });
         if (thereIsAdmin) navigate("/dashboard");
         navigate(0);
       }
@@ -64,8 +64,8 @@ const Login = () => {
           required
         />
 
-        <button className={button} type="submit">
-          Iniciar sesion
+        <button className={button} type="submit" disabled={loading}>
+          {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </button>
         <NavLink to="/forgotPassword">Olvide mi contrasena.</NavLink>
         {err && <ErrorComponent err={err} />}

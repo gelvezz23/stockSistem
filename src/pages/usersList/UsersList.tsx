@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
+import Modal from "../../components/Modal";
+import { FormsClient } from "./form";
+import useUpdateUserStatus from "../../utils/hook/useUpdateStatus";
 
-import { FormsProveedor } from "./form";
-import useUpdateUserStatus from "../../../utils/hook/useUpdateStatus";
-import Modal from "../../../components/Modal";
-
-const ProveedorList = () => {
+export const UsersList = () => {
   const [users, setUsers] = useState<any>([]);
   const [errorState, setError] = useState<any>(null);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
@@ -28,7 +27,7 @@ const ProveedorList = () => {
   useEffect(() => {
     const getUsers = async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_BACK_URL}/api/proveedores`,
+        `${import.meta.env.VITE_BACK_URL}/api/usuarios`,
         {
           method: "GET",
           headers: {
@@ -46,7 +45,7 @@ const ProveedorList = () => {
 
   return (
     <section>
-      <h1>Lista de proveedorer</h1>
+      <h1>Lista de usuarios</h1>
       {errorState && <p>{errorState}</p>}
       {users.map(
         (user: {
@@ -62,7 +61,7 @@ const ProveedorList = () => {
               {" "}
               {/* Agregar una key única al div */}
               <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                <FormsProveedor user={user} />
+                <FormsClient user={user} />
               </Modal>
               <div>
                 <h5>id: {user.usuario_id}</h5>
@@ -143,5 +142,3 @@ const ProveedorList = () => {
     </section>
   );
 };
-
-export default ProveedorList;

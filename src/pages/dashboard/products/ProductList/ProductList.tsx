@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
+import useUpdateUserStatus from "../../../../utils/hook/useUpdateStatus";
+import Modal from "../../../../components/Modal";
+import Create from "../create";
 
-import { FormsProveedor } from "./form";
-import useUpdateUserStatus from "../../../utils/hook/useUpdateStatus";
-import Modal from "../../../components/Modal";
-
-const ProveedorList = () => {
-  const [users, setUsers] = useState<any>([]);
+export const ProductList = () => {
+  const [products, setProducts] = useState<any>([]);
   const [errorState, setError] = useState<any>(null);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
 
@@ -26,9 +25,9 @@ const ProveedorList = () => {
   };
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getProducts = async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_BACK_URL}/api/proveedores`,
+        `${import.meta.env.VITE_BACK_URL}/api/productos`,
         {
           method: "GET",
           headers: {
@@ -39,41 +38,45 @@ const ProveedorList = () => {
       if (!response.ok) setError("Usuarios no encontrados");
 
       const data = await response.json();
-      setUsers(data);
+      setProducts(data);
     };
-    getUsers();
+    getProducts();
   }, []);
 
   return (
     <section>
-      <h1>Lista de proveedorer</h1>
+      <h1>Lista de productos</h1>
       {errorState && <p>{errorState}</p>}
-      {users.map(
+      {products.map(
         (user: {
-          usuario_id: number;
-          email: string;
-          name_rol: string;
+          producto_id: number;
+          nombre_producto: string;
+          stock: number;
           estado: string;
+          image_url: string;
         }) => {
-          const isThisModalOpen = openModalId === user.usuario_id; // Verificar si este modal debe estar abierto
+          const isThisModalOpen = openModalId === user.producto_id; // Verificar si este modal debe estar abierto
 
           return (
-            <div className="users" key={user.usuario_id}>
+            <div className="users" key={user.producto_id}>
               {" "}
               {/* Agregar una key única al div */}
               <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                <FormsProveedor user={user} />
+                <section style={{ height: "78vh", overflow: "auto" }}>
+                  <Create productData={user} />
+                </section>
               </Modal>
+              <img src={user.image_url} width={50} height={50} />
               <div>
-                <h5>id: {user.usuario_id}</h5>
-                <p>{user.email}</p>
+                <h5>id: {user.producto_id}</h5>
+                <p>{user.nombre_producto}</p>
               </div>
               <div>
-                <p>rol: {user.name_rol}</p>
+                <p>stock: {user.stock}</p>
                 <p>estado: {user.estado}</p>
               </div>
               <div className="users-options">
-                <div onClick={() => openModal(user.usuario_id)}>
+                <div onClick={() => openModal(user.producto_id)}>
                   {" "}
                   {/* Pasar el ID del usuario al abrir el modal */}
                   <svg
@@ -95,7 +98,7 @@ const ProveedorList = () => {
                 <div
                   onClick={() => {
                     handleUpdateStatus(
-                      user.usuario_id,
+                      user.producto_id,
                       user.estado === "activo" ? "desactivo" : "activo"
                     );
                   }}
@@ -143,5 +146,3 @@ const ProveedorList = () => {
     </section>
   );
 };
-
-export default ProveedorList;

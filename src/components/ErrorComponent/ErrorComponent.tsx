@@ -13,7 +13,7 @@ const ErrorComponent: FC<{ err: any }> = ({ err }) => {
       "No hay ningún usuario registrado con este correo electrónico.",
     "auth/invalid-email": "La dirección de correo electrónico no es válida.",
   };
-  const text = dataError[err];
+  const text = dataError[err] || err;
 
   return <p>{text}</p>;
 };
