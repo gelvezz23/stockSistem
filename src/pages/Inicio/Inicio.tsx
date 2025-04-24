@@ -17,7 +17,7 @@ const Inicio: FC = () => {
           },
         }
       );
-      if (!response.ok) setError("Usuarios no encontrados");
+      if (!response.ok) setError("Porduct no encontrados");
 
       const data = await response.json();
       setProducts(data);
@@ -34,6 +34,7 @@ const Inicio: FC = () => {
             <ProductCard key={item.producto_id} product={item} />
           </>
         ))}
+        {errorState && <p>{errorState}</p>}
       </section>
     </div>
   );
