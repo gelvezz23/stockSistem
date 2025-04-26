@@ -8,8 +8,11 @@ import Dashboard from "../pages/dashboard";
 import { CreateProducts } from "../pages/dashboard/products";
 import { ProveedorList } from "../pages/dashboard/providers";
 import ForgotPasswordForm from "../pages/ForgotPassword";
-import { UsersList } from "../pages/usersList/UsersList";
+import { UsersList } from "../pages/dashboard/usersList/UsersList";
 import { ProductList } from "../pages/dashboard/products/ProductList/ProductList";
+import LowStockProductsList from "../pages/LowStock";
+import { Cliente } from "../pages/perfil/cliente";
+import { Tecnico } from "../pages/perfil/tecnico";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -51,6 +54,19 @@ export const routes = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           {
+            path: "perfil/cliente",
+            element: <Cliente />,
+          },
+          {
+            path: "perfil/tecnico",
+            element: <Tecnico />,
+          },
+        ],
+      },
+      {
+        element: <PrivateRoute />,
+        children: [
+          {
             path: "dashboard",
             element: <Dashboard />,
             children: [
@@ -72,7 +88,7 @@ export const routes = createBrowserRouter([
               },
               { path: "users/list", element: <UsersList /> },
               { path: "users/forgotPassword", element: <ForgotPasswordForm /> },
-              { path: "alerts", element: <h1>Alert</h1> },
+              { path: "alerts", element: <LowStockProductsList /> },
             ],
           },
         ],

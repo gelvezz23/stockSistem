@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: "3rem", height: "100vh" }}>
+      <main className="bg-gray-800 pt-16 pb-16 h-screen">
         <Outlet />
       </main>
       <Footer />

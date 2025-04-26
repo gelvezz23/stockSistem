@@ -1,5 +1,4 @@
-import { useState } from "react";
-import styles from "./Login.module.css";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import ErrorComponent from "../../components/ErrorComponent";
 import { useSessionStorage } from "../../utils/hook/useSessionStorage";
@@ -15,7 +14,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const { section, form, label, input, button } = styles;
 
   const handleValue = (event: { target: { value: string; name: string } }) => {
     const { value, name } = event.target;
@@ -31,45 +29,86 @@ const Login = () => {
       if (error) {
         setError(error || "");
       }
-      if (user && isLoggedIn) {
-        const thereIsAdmin = user?.rol_id === 1;
-        setValue({ user, thereIsAdmin });
-        if (thereIsAdmin) navigate("/dashboard");
-        navigate(0);
-      }
+      // La navegación ahora se maneja en el useEffect
     }
   };
 
+  useEffect(() => {
+    if (user && isLoggedIn && !loading) {
+      const thereIsAdmin = user?.rol_id === 1;
+      setValue({ user, thereIsAdmin });
+      if (thereIsAdmin) {
+        navigate(0);
+      } else {
+        navigate(0); // O la ruta a la que deben ir los usuarios no admin
+      }
+    }
+  }, [user, isLoggedIn, loading]);
+
   return (
-    <section className={section}>
-      <form className={form} onSubmit={handleSubmit}>
-        <h1>Bienvenido</h1>
-        <label className={label}>Email</label>
-        <input
-          className={input}
-          name="email"
-          type="email"
-          placeholder="Email"
-          onChange={handleValue}
-          required
-        />
+    <section className="flex items-center justify-center min-h-screen">
+      <section className="flex items-center justify-center bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+            Bienvenido
+          </h1>
+          <div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Tu correo electrónico"
+              onChange={handleValue}
+              required
+            />
+          </div>
 
-        <label className={label}>Password</label>
-        <input
-          className={input}
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleValue}
-          required
-        />
+          <div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Contraseña
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Tu contraseña"
+              onChange={handleValue}
+              required
+            />
+          </div>
 
-        <button className={button} type="submit" disabled={loading}>
-          {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
-        </button>
-        <NavLink to="/forgotPassword">Olvide mi contrasena.</NavLink>
-        {err && <ErrorComponent err={err} />}
-      </form>
+          <div className="flex items-center justify-between gap-8">
+            <button
+              className="bg-green-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+            </button>
+          </div>
+          {err && <ErrorComponent err={err} />}
+          <p className="text-center text-gray-500 text-xs mt-4">
+            ¿No tienes una cuenta?{" "}
+            <NavLink
+              to="/Registro"
+              className="font-semibold text-blue-500 hover:text-blue-800"
+            >
+              Regístrate
+            </NavLink>
+          </p>
+        </form>
+      </section>
     </section>
   );
 };

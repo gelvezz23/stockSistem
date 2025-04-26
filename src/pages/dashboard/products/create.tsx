@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
+
 const Create = ({ productData }: { productData: any }) => {
   const url = import.meta.env.VITE_BACK_URL || "";
 
@@ -138,7 +139,7 @@ const Create = ({ productData }: { productData: any }) => {
   };
 
   return (
-    <>
+    <section className="productForm w-full">
       <h1>Ingrese los Datos del Producto</h1>
 
       <form id="productoForm" onSubmit={handleSubmit}>
@@ -340,7 +341,7 @@ const Create = ({ productData }: { productData: any }) => {
         {submitSuccess && <p style={{ color: "green" }}>{submitSuccess}</p>}
         {submitError && <p style={{ color: "red" }}>{submitError}</p>}
       </form>
-    </>
+    </section>
   );
 };
 

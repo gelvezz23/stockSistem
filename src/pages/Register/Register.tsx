@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router";
-import styles from "./Register.module.css";
 import { useState } from "react";
 import ErrorComponent from "../../components/ErrorComponent";
 import { useSessionStorage } from "../../utils/hook/useSessionStorage";
@@ -28,8 +27,6 @@ const Register = ({ onDashboard = false }) => {
     userType: "cliente",
   });
   const [err] = useState("");
-  const { section, form, label, input, button } = styles;
-  console.log(valueForm);
   const handleValue = (event: { target: { value: string; name: string } }) => {
     const { value, name } = event.target;
     setValueForm({ ...valueForm, [name]: value });
@@ -53,61 +50,110 @@ const Register = ({ onDashboard = false }) => {
   };
 
   return (
-    <section className={section}>
-      <form className={form} onSubmit={handleSubmit}>
-        <label className={label}>Nombre</label>
-        <input
-          className={input}
-          type="text"
-          name="name"
-          value={valueForm.name}
-          onChange={handleValue}
-        />
+    <section className="flex items-center justify-center min-h-screen">
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 md:w-1/2 lg:w-1/3"
+        onSubmit={handleSubmit}
+      >
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="name"
+          >
+            Nombre
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="text"
+            name="name"
+            value={valueForm.name}
+            onChange={handleValue}
+          />
+        </div>
 
-        <label className={label}>Email</label>
-        <input
-          className={input}
-          type="email"
-          name="email"
-          value={valueForm.email}
-          onChange={handleValue}
-        />
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="email"
+            type="email"
+            name="email"
+            value={valueForm.email}
+            onChange={handleValue}
+          />
+        </div>
 
-        <label className={label}>Contraseña</label>
-        <input
-          className={input}
-          type="password"
-          name="password"
-          value={valueForm.password}
-          onChange={handleValue}
-        />
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="password"
+          >
+            Contraseña
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="password"
+            type="password"
+            name="password"
+            value={valueForm.password}
+            onChange={handleValue}
+          />
+        </div>
 
         {/* Nuevo select para el tipo de usuario */}
-        <label className={label}>Tipo de Usuario</label>
-        <select
-          className={input}
-          name="userType"
-          value={valueForm.userType}
-          onChange={handleValue}
-        >
-          <option key={111} value={4}>
-            selecciona
-          </option>
-          {loading && <option>cargando ...</option>}
-          {error && <option>error.</option>}
-          {roles.map((rol: { id: number; name_rol: string }) => (
-            <option key={rol.id} value={rol.id}>
-              {rol.name_rol}
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="userType"
+          >
+            Tipo de Usuario
+          </label>
+          <select
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="userType"
+            name="userType"
+            value={valueForm.userType}
+            onChange={handleValue}
+          >
+            <option key={111} value={0}>
+              selecciona
             </option>
-          ))}
-        </select>
+            {loading && <option>cargando ...</option>}
+            {error && <option>error.</option>}
+            {roles.map((rol: { id: number; name_rol: string }) => (
+              <option key={rol.id} value={rol.id}>
+                {rol.name_rol}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <button className={button} disabled={loadingCreate} type="submit">
-          {!loadingCreate ? "Registrarse" : "Creando..."}
-        </button>
-        {loadingCreate && <p>cargando...</p>}
-        {errorCreate && <p>{errorCreate}</p>}
-        {err && <ErrorComponent err={err} />}
+        <div className="flex items-center justify-between">
+          <button
+            className="bg-green-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            disabled={loadingCreate}
+            type="submit"
+          >
+            {!loadingCreate ? "Registrarse" : "Creando..."}
+          </button>
+        </div>
+        {loadingCreate && (
+          <p className="text-gray-600 text-sm italic">cargando...</p>
+        )}
+        {errorCreate && (
+          <p className="text-red-500 text-sm italic">{errorCreate}</p>
+        )}
+        {err && (
+          <div className="mt-4">
+            <ErrorComponent err={err} />
+          </div>
+        )}
       </form>
     </section>
   );

@@ -12,19 +12,20 @@
   margin-bottom: 15px;
 }
 
-label {
+.productForm label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
   color: #333;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="email"],
-input[type="tel"],
-textarea,
-select {
+.productForm input[type="text"],
+.productForm input[type="number"],
+.productForm input[type="email"],
+.productForm input[type="tel"],
+.productForm input[type="password"],
+.productForm textarea,
+.productForm select {
   width: calc(100% - 12px);
   padding: 8px;
   border: 1px solid #ddd;
@@ -34,11 +35,11 @@ select {
   color: #555;
 }
 
-textarea {
+.productForm textarea {
   resize: vertical; /* Permite redimensionar verticalmente */
 }
 
-select {
+.productForm select {
   appearance: none; /* Oculta la flecha por defecto en algunos navegadores */
   background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
   background-repeat: no-repeat;
@@ -47,12 +48,12 @@ select {
   padding-right: 30px; /* Espacio para la flecha */
 }
 
-select::-ms-expand {
+.productForm select::-ms-expand {
   display: none; /* Oculta la flecha en IE */
 }
 
-button[type="submit"] {
-  background-color: #007bff;
+.productForm button[type="submit"] {
+  background-color: #03630a;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -62,11 +63,11 @@ button[type="submit"] {
   transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
-  background-color: #0056b3;
+.productForm button[type="submit"]:hover {
+  background-color: #0ee12d;
 }
 
-h1 {
+.productForm h1 {
   color: #333;
   text-align: center;
   margin-bottom: 20px;
@@ -110,13 +111,13 @@ h1 {
     padding: 15px;
   }
 
-  input[type="text"],
-  input[type="number"],
-  input[type="email"],
-  input[type="tel"],
-  textarea,
-  select,
-  button[type="submit"] {
+  .productForm input[type="text"],
+  .productForm input[type="number"],
+  .productForm input[type="email"],
+  .productForm input[type="tel"],
+  .productForm textarea,
+  .productForm select,
+  .productForm button[type="submit"] {
     font-size: 14px;
   }
 }

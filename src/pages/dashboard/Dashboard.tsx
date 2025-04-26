@@ -3,7 +3,7 @@ import styles from "./Dashboard.module.css";
 import { Outlet, useNavigate } from "react-router";
 import BotonFlotante from "../../components/BotonFlotante";
 const Dashboard = () => {
-  const { container, content } = styles;
+  const { container } = styles;
   const navigate = useNavigate();
   const handleClickFlotante = () => {
     navigate("alerts");
@@ -12,7 +12,7 @@ const Dashboard = () => {
     <div className={container}>
       <Menu />
 
-      <div className={content}>
+      <div className="bg-gray-800 w-full p-4 py-8 h-screen overflow-scroll">
         <Outlet />
       </div>
 

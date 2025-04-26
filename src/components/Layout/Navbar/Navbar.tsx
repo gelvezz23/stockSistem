@@ -24,6 +24,17 @@ const Navbar = () => {
               <NavLink to="/dashboard">Dashboard</NavLink>
             </li>
           )}
+          {storage?.user?.rol_id === 4 && (
+            <li className={listItem}>
+              <NavLink to="/perfil/cliente">Perfil:(Cliente)</NavLink>
+            </li>
+          )}
+
+          {storage?.user?.rol_id === 3 && (
+            <li className={listItem}>
+              <NavLink to="/perfil/tecnico">Perfil:(tecnico)</NavLink>
+            </li>
+          )}
           {!storage ? (
             <>
               <li className={listItem}>
