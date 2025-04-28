@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
-interface Product {
+export interface Product {
   categoria_id: number;
   codigo: string;
   descripcion: string;
