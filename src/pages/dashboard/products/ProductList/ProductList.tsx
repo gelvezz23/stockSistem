@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
-import useUpdateUserStatus from "../../../../utils/hook/useUpdateStatus";
 import Modal from "../../../../components/Modal";
 import Create from "../create";
 
@@ -10,10 +9,31 @@ export const ProductList = () => {
   const [errorState, setError] = useState<any>(null);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
 
-  const { updateUserStatus } = useUpdateUserStatus();
+  const handleUpdateStatus = async (producto_id: number, estado: string) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACK_URL}/api/productos/${producto_id}/estado`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ estado }),
+      }
+    );
 
-  const handleUpdateStatus = async (userId: number, estado: string) => {
-    await updateUserStatus({ usuario_id: userId, estado });
+    if (!response.ok) {
+      const errorData = await response.json();
+      setError(
+        "Error al actualizar el estado:" + errorData.message ||
+          `HTTP error! status: ${response.status}`
+      );
+      // Aquí podrías mostrar un mensaje de error al usuario
+      return false; // Indica que la actualización falló
+    }
+
+    const data = await response.json();
+    console.log("Estado actualizado:", data.message);
+    window.location.reload();
   };
 
   const openModal = (userId: number) => {

@@ -32,7 +32,6 @@ const Create = ({ productData }: { productData: any }) => {
     image_url: productData?.image_url,
   });
 
-  console.log(productos);
   const handleChange = (event: { target: { name: any; value: any } }) => {
     const { name, value } = event.target;
     setProductos({ ...productos, [name]: value });
@@ -91,7 +90,7 @@ const Create = ({ productData }: { productData: any }) => {
 
     fetchProveedores();
   }, [url]);
-
+  console.log(productData);
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -99,37 +98,68 @@ const Create = ({ productData }: { productData: any }) => {
     setSubmitSuccess(null);
 
     try {
-      const response = await fetch(`${url}/api/productos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productos),
-      });
+      const productExist = await fetch(
+        `${url}/api/productos/${productData.producto_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await productExist.json();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || `Error al crear producto: ${response.status}`
+      if (data) {
+        const response = await fetch(
+          `${url}/api/productos/${productData.producto_id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(productos),
+          }
         );
-      }
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `Error al crear producto: ${response.status}`
+          );
+        }
+        setSubmitSuccess("Producto actualizado exitosamente!");
+        window.location.reload();
+      } else {
+        const response = await fetch(`${url}/api/productos`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productos),
+        });
 
-      setSubmitSuccess("Producto creado exitosamente!");
-      setProductos({
-        // Reset del formulario
-        nombre_producto: "",
-        descripcion: "",
-        precio_costo: "",
-        precio_venta: "",
-        stock: 0,
-        categoria_id: "",
-        proveedor_id: "",
-        estado: "activo",
-        marca: "",
-        stock_minimo: 0,
-        codigo: 0,
-        image_url: "",
-      });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `Error al crear producto: ${response.status}`
+          );
+        }
+        setSubmitSuccess("Producto creado exitosamente!");
+        setProductos({
+          // Reset del formulario
+          nombre_producto: "",
+          descripcion: "",
+          precio_costo: "",
+          precio_venta: "",
+          stock: 0,
+          categoria_id: "",
+          proveedor_id: "",
+          estado: "activo",
+          marca: "",
+          stock_minimo: 0,
+          codigo: 0,
+          image_url: "",
+        });
+      }
     } catch (error: any) {
       console.error("Error al crear producto:", error);
       setSubmitError(error.message);
