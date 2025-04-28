@@ -107,6 +107,23 @@ const Menu = () => {
           </NavLink>
         </li>
       </ul>
+
+      <h4 className="text-md font-semibold text-white-700 mt-4 mb-1">Ventas</h4>
+      <hr className="border-t border-white-300 my-2" />
+      <ul className="list-none pl-0">
+        <li className="mb-1">
+          <NavLink
+            to="ventas"
+            className={({ isActive }) =>
+              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                isActive ? "bg-blue-500 text-white" : ""
+              }`
+            }
+          >
+            Ver las ventas
+          </NavLink>
+        </li>
+      </ul>
     </div>
   );
 };

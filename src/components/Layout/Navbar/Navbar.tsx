@@ -1,10 +1,13 @@
 import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
+import { useCartStore } from "../../../utils/zustand/store/useCartStore";
+import ShoppingCartIconWithBadge from "../../ShoppingCartIcon";
 import styles from "./Navbar.module.css";
 import { NavLink, useNavigate } from "react-router";
 const Navbar = () => {
   const { header, nav, list, listItem } = styles;
   const { storage, removeValue } = useSessionStorage("user", null);
-
+  const products = useCartStore((state) => state.cartItems);
+  console.log(products);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -48,6 +51,13 @@ const Navbar = () => {
             <li className={listItem}>
               <NavLink to="/" onClick={handleLogout}>
                 Cerrar sesion
+              </NavLink>
+            </li>
+          )}
+          {products.length > 0 && (
+            <li className={listItem}>
+              <NavLink to="/shoppingCart">
+                <ShoppingCartIconWithBadge />
               </NavLink>
             </li>
           )}

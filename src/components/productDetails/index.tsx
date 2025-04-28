@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
+import { useCartStore } from "../../utils/zustand/store/useCartStore";
 
 export interface Product {
   categoria_id: number;
@@ -19,6 +20,16 @@ export interface Product {
 }
 
 export const ProductDetails: React.FC<{ product: any }> = ({ product }) => {
+  const addProduct = useCartStore((state) => state.addProduct);
+  const [add, setAdd] = useState("");
+  const handleAddProduct = (product: any) => {
+    addProduct({ ...product, quantity: 1 });
+    setAdd("Producto fue agregado");
+    setTimeout(() => {
+      setAdd("");
+    }, 1000);
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen py-8">
       <div className="container mx-auto p-6 bg-white shadow-md rounded-md">
@@ -102,10 +113,14 @@ export const ProductDetails: React.FC<{ product: any }> = ({ product }) => {
           </div>
         </div>
         <div className="w-full py-4">
-          <button className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          <button
+            onClick={() => handleAddProduct(product)}
+            className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
             Agregar producto
           </button>
         </div>
+        {add && <p className="text-gray-900">{add}</p>}
         <div className="mt-6 border-t pt-4 text-gray-500 text-sm">
           <p>
             <span className="font-medium">

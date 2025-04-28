@@ -14,6 +14,8 @@ import LowStockProductsList from "../pages/LowStock";
 import { Cliente } from "../pages/perfil/cliente";
 import { Tecnico } from "../pages/perfil/tecnico";
 import { Shop } from "../pages/Shop";
+import ShoppingCartPage from "../pages/ShoppingCart";
+import { Ventas } from "../pages/dashboard/ventas";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -62,6 +64,7 @@ export const routes = createBrowserRouter([
             path: "perfil/tecnico",
             element: <Tecnico />,
           },
+          { path: "shoppingCart", element: <ShoppingCartPage /> },
         ],
       },
       {
@@ -94,6 +97,8 @@ export const routes = createBrowserRouter([
               { path: "users/list", element: <UsersList /> },
               { path: "users/forgotPassword", element: <ForgotPasswordForm /> },
               { path: "alerts", element: <LowStockProductsList /> },
+              { path: "shoppingCart", element: <ShoppingCartPage /> },
+              { path: "ventas", element: <Ventas /> },
             ],
           },
         ],
