@@ -27,21 +27,25 @@ export const ProductList = () => {
         "Error al actualizar el estado:" + errorData.message ||
           `HTTP error! status: ${response.status}`
       );
-      // Aquí podrías mostrar un mensaje de error al usuario
-      return false; // Indica que la actualización falló
+      return false;
     }
 
     const data = await response.json();
     console.log("Estado actualizado:", data.message);
-    window.location.reload();
+    // Actualizar el estado local sin recargar
+    setProducts((prevProducts: any[]) =>
+      prevProducts.map((product) =>
+        product.producto_id === producto_id ? { ...product, estado } : product
+      )
+    );
   };
 
-  const openModal = (userId: number) => {
-    setOpenModalId(userId); // Establecer el ID del usuario cuyo modal debe abrirse
+  const openModal = (productId: number) => {
+    setOpenModalId(productId);
   };
 
   const closeModal = () => {
-    setOpenModalId(null); // Cerrar cualquier modal abierto
+    setOpenModalId(null);
   };
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export const ProductList = () => {
           },
         }
       );
-      if (!response.ok) setError("Usuarios no encontrados");
+      if (!response.ok) setError("Productos no encontrados");
 
       const data = await response.json();
       setProducts(data);
@@ -64,64 +68,79 @@ export const ProductList = () => {
   }, []);
 
   return (
-    <section className="bg-gray-100 min-h-screen py-8 overflow-scroll">
+    <section className="bg-gray-100 min-h-screen py-8 overflow-x-auto">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Lista de productos
         </h1>
         {errorState && <p className="text-red-500 mb-4">{errorState}</p>}
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map(
-            (user: {
-              producto_id: number;
-              nombre_producto: string;
-              stock: number;
-              estado: string;
-              image_url: string;
-            }) => {
-              const isThisModalOpen = openModalId === user.producto_id;
-
+        <table className="min-w-full bg-white shadow-md rounded-md">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                ID
+              </th>
+              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                Nombre
+              </th>
+              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                Stock
+              </th>
+              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                Estado
+              </th>
+              <th className="py-3 px-6 text-right font-semibold text-gray-700">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product: any) => {
+              const isThisModalOpen = openModalId === product.producto_id;
               return (
-                <div
-                  key={user.producto_id}
-                  className="bg-white rounded-md shadow-md overflow-hidden"
+                <tr
+                  key={product.producto_id}
+                  className="border-b border-gray-200"
                 >
                   <Modal isOpen={isThisModalOpen} onClose={closeModal}>
                     <section className="h-[78vh] overflow-auto p-4">
-                      <Create productData={user} />
+                      <Create productData={product} />
                     </section>
                   </Modal>
-                  <img
-                    src={user.image_url}
-                    alt={user.nombre_producto}
-                    className="w-full h-32 object-cover"
-                  />
-                  <div className="p-4">
-                    <h5 className="text-lg font-semibold text-gray-700 mb-2">
-                      {user.nombre_producto}
-                    </h5>
-                    <p className="text-sm text-gray-500 mb-1">
-                      ID: {user.producto_id}
-                    </p>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
-                      <p className="mr-2">Stock: {user.stock}</p>
-                      <p>
-                        Estado:{" "}
-                        <span
-                          className={
-                            user.estado === "activo"
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }
-                        >
-                          {user.estado}
-                        </span>
-                      </p>
+                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-700">
+                    {product.producto_id}
+                  </td>
+                  <td className="py-3 px-6 text-left">
+                    <div className="flex items-center text-gray-700">
+                      {product.image_url && (
+                        <img
+                          src={product.image_url}
+                          alt={product.nombre_producto}
+                          className="w-8 h-8 object-cover rounded-full mr-2"
+                        />
+                      )}
+                      <span>{product.nombre_producto}</span>
                     </div>
-                    <div className="flex items-center justify-end mt-2">
+                  </td>
+                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
+                    {product.stock}
+                  </td>
+                  <td className="py-3 px-6 text-left whitespace-nowrap">
+                    <span
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                        product.estado === "activo"
+                          ? "bg-green-200 text-green-800"
+                          : "bg-red-200 text-red-800"
+                      }`}
+                    >
+                      {product.estado}
+                    </span>
+                  </td>
+                  <td className="py-3 px-6 text-right whitespace-nowrap text-gray-900">
+                    <div className="flex items-center justify-end">
                       <div
-                        onClick={() => openModal(user.producto_id)}
-                        className="cursor-pointer text-blue-500 hover:text-blue-700 mr-2"
+                        onClick={() => openModal(product.producto_id)}
+                        className="cursor-pointer text-blue-500 hover:text-blue-700 mr-4"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -139,16 +158,20 @@ export const ProductList = () => {
                           <path d="M9 7.07a7 7 0 0 0 1 13.93a7 7 0 0 0 6.929 -6"></path>
                         </svg>
                       </div>
-                      <div
+                      <button
                         onClick={() => {
                           handleUpdateStatus(
-                            user.producto_id,
-                            user.estado === "activo" ? "desactivo" : "activo"
+                            product.producto_id,
+                            product.estado === "activo" ? "desactivo" : "activo"
                           );
                         }}
-                        className="cursor-pointer text-green-500 hover:text-green-700"
+                        className={`py-2 px-3 rounded-md text-xs flex items-center justify-end ${
+                          product.estado === "activo"
+                            ? "bg-red-500 hover:bg-red-700 text-white"
+                            : "bg-green-500 hover:bg-green-700 text-white"
+                        }`}
                       >
-                        {user.estado === "activo" ? (
+                        {product.estado === "activo" ? (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -183,14 +206,15 @@ export const ProductList = () => {
                             <path d="M9.7 17l4.6 0"></path>
                           </svg>
                         )}
-                      </div>
+                        {product.estado === "activo" ? "Desactivar" : "Activar"}
+                      </button>
                     </div>
-                  </div>
-                </div>
+                  </td>
+                </tr>
               );
-            }
-          )}
-        </div>
+            })}
+          </tbody>
+        </table>
       </div>
     </section>
   );
