@@ -35,7 +35,7 @@ const Modal = ({
             </svg>
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-[10px]">{children}</div>
       </div>
     </div>,
     modalRoot

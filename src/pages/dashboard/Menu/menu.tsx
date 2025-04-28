@@ -94,6 +94,18 @@ const Menu = () => {
             Ver Productos
           </NavLink>
         </li>
+        <li className="mb-1">
+          <NavLink
+            to="products/shop"
+            className={({ isActive }) =>
+              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                isActive ? "bg-blue-500 text-white" : ""
+              }`
+            }
+          >
+            Vender Productos
+          </NavLink>
+        </li>
       </ul>
     </div>
   );

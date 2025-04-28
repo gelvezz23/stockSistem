@@ -13,6 +13,7 @@ import { ProductList } from "../pages/dashboard/products/ProductList/ProductList
 import LowStockProductsList from "../pages/LowStock";
 import { Cliente } from "../pages/perfil/cliente";
 import { Tecnico } from "../pages/perfil/tecnico";
+import { Shop } from "../pages/Shop";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -77,6 +78,10 @@ export const routes = createBrowserRouter([
               {
                 path: "products/viewStock",
                 element: <ProductList />,
+              },
+              {
+                path: "products/shop",
+                element: <Shop />,
               },
               {
                 path: "providers/create",
