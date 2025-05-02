@@ -22,6 +22,7 @@ export interface Product {
 export const ProductDetails: React.FC<{ product: any }> = ({ product }) => {
   const addProduct = useCartStore((state) => state.addProduct);
   const [add, setAdd] = useState("");
+
   const handleAddProduct = (product: any) => {
     addProduct({ ...product, quantity: 1 });
     setAdd("Producto fue agregado");
@@ -68,7 +69,7 @@ export const ProductDetails: React.FC<{ product: any }> = ({ product }) => {
                   <span className="font-medium text-gray-800">Estado:</span>{" "}
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                      product.estado === "activo"
+                      product.estado === "disponible"
                         ? "bg-green-200 text-green-800"
                         : "bg-red-200 text-red-800"
                     }`}
@@ -81,12 +82,12 @@ export const ProductDetails: React.FC<{ product: any }> = ({ product }) => {
             <div className="mb-4">
               <p className="text-gray-700 font-semibold">Precios:</p>
               <ul className="list-none space-y-2">
-                <li>
+                {/*<li>
                   <span className="font-medium text-gray-800">
                     Precio de Costo: $
                     {parseFloat(product.precio_costo).toLocaleString("es-CO")}
                   </span>
-                </li>
+                </li> */}
                 <li>
                   <span className="font-medium text-green-800">
                     Precio de Venta: $

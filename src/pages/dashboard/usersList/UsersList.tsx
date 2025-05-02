@@ -136,9 +136,7 @@ export const UsersList = () => {
                           onClick={() => {
                             handleUpdateStatus(
                               user.usuario_id,
-                              user.estado === "activo"
-                                ? "desactivado"
-                                : "activo"
+                              user.estado === "activo" ? "inactivo" : "activo"
                             );
                           }}
                           className={`py-2 px-3 rounded-md text-xs flex items-center justify-end ${

@@ -8,7 +8,6 @@ export const ProductList = () => {
   const [products, setProducts] = useState<any>([]);
   const [errorState, setError] = useState<any>(null);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
-
   const handleUpdateStatus = async (producto_id: number, estado: string) => {
     const response = await fetch(
       `${import.meta.env.VITE_BACK_URL}/api/productos/${producto_id}/estado`,
@@ -62,6 +61,7 @@ export const ProductList = () => {
       if (!response.ok) setError("Productos no encontrados");
 
       const data = await response.json();
+
       setProducts(data);
     };
     getProducts();
@@ -79,6 +79,9 @@ export const ProductList = () => {
             <tr>
               <th className="py-3 px-6 text-left font-semibold text-gray-700">
                 ID
+              </th>
+              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                Sku
               </th>
               <th className="py-3 px-6 text-left font-semibold text-gray-700">
                 Nombre
@@ -110,6 +113,9 @@ export const ProductList = () => {
                   <td className="py-3 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.producto_id}
                   </td>
+                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-700">
+                    {product.codigo}
+                  </td>
                   <td className="py-3 px-6 text-left">
                     <div className="flex items-center text-gray-700">
                       {product.image_url && (
@@ -128,7 +134,7 @@ export const ProductList = () => {
                   <td className="py-3 px-6 text-left whitespace-nowrap">
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                        product.estado === "activo"
+                        product.estado === "disponible"
                           ? "bg-green-200 text-green-800"
                           : "bg-red-200 text-red-800"
                       }`}
@@ -162,16 +168,18 @@ export const ProductList = () => {
                         onClick={() => {
                           handleUpdateStatus(
                             product.producto_id,
-                            product.estado === "activo" ? "desactivo" : "activo"
+                            product.estado === "disponible"
+                              ? "no disponible"
+                              : "disponible"
                           );
                         }}
                         className={`py-2 px-3 rounded-md text-xs flex items-center justify-end ${
-                          product.estado === "activo"
+                          product.estado === "disponible"
                             ? "bg-red-500 hover:bg-red-700 text-white"
                             : "bg-green-500 hover:bg-green-700 text-white"
                         }`}
                       >
-                        {product.estado === "activo" ? (
+                        {product.estado === "disponible" ? (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -206,7 +214,9 @@ export const ProductList = () => {
                             <path d="M9.7 17l4.6 0"></path>
                           </svg>
                         )}
-                        {product.estado === "activo" ? "Desactivar" : "Activar"}
+                        {product.estado === "disponible"
+                          ? "no disponible"
+                          : "disponible"}
                       </button>
                     </div>
                   </td>

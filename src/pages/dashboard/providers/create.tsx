@@ -99,7 +99,7 @@ const ProveedorList = () => {
                   <td className="py-3 px-6 text-left whitespace-nowrap">
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                        user.estado === "activo"
+                        user.estado === "disponible"
                           ? "bg-green-200 text-green-800"
                           : "bg-red-200 text-red-800"
                       }`}
@@ -133,7 +133,7 @@ const ProveedorList = () => {
                         onClick={() => {
                           handleUpdateStatus(
                             user.usuario_id,
-                            user.estado === "activo" ? "desactivo" : "activo"
+                            user.estado === "activo" ? "inactivo" : "activo"
                           );
                         }}
                         className={`py-2 px-3 rounded-md text-xs flex items-center justify-end ${

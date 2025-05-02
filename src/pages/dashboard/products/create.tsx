@@ -1,14 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
+import { generarSKU } from "../../../utils/generateSku";
 
 const Create = ({ productData }: { productData: any }) => {
   const url = import.meta.env.VITE_BACK_URL || "";
-
+  const [lastId, setLastId] = useState(productData?.producto_id || 0);
   const [categorias, setCategorias] = useState<any[]>([]); // Estado para almacenar las categorías
   const [categoriasError, setCategoriasError] = useState<string | null>(null);
   const [categoriasLoading, setCategoriasLoading] = useState(true);
-
+  const [productoSku, setProductoSku] = useState("");
   const [proveedores, setProveedores] = useState<any[]>([]); // Estado para proveedores
   const [proveedoresError, setProveedoresError] = useState<string | null>(null);
   const [proveedoresLoading, setProveedoresLoading] = useState(true);
@@ -28,14 +30,44 @@ const Create = ({ productData }: { productData: any }) => {
     estado: productData?.estado,
     marca: productData?.marca,
     stock_minimo: productData?.stock_minimo,
-    codigo: productData?.codigo,
+    codigo: productData?.codigo || productoSku,
     image_url: productData?.image_url,
   });
+  const productSkuData = generarSKU(
+    lastId,
+    productos?.nombre_producto,
+    productos?.proveedor_id,
+    productos?.categoria_id,
+    productos?.marca
+  );
+
+  console.log(productSkuData);
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
     const { name, value } = event.target;
-    setProductos({ ...productos, [name]: value });
+    setProductos({ ...productos, [name]: value, codigo: productSkuData });
+
+    setProductoSku(productSkuData);
   };
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}/api/productos`
+      );
+      const data = await response.json();
+      const idMayor = data.reduce(
+        (maxId: number, objeto: { producto_id: number }) => {
+          return Math.max(maxId, objeto.producto_id);
+        },
+        -Infinity
+      );
+      setLastId(idMayor + 1);
+    };
+    if (lastId === 0) {
+      getProducts();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -90,7 +122,7 @@ const Create = ({ productData }: { productData: any }) => {
 
     fetchProveedores();
   }, [url]);
-  console.log(productData);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -99,7 +131,7 @@ const Create = ({ productData }: { productData: any }) => {
 
     try {
       const productExist = await fetch(
-        `${url}/api/productos/${productData.producto_id}`,
+        `${url}/api/productos/${productData?.producto_id}`,
         {
           method: "GET",
           headers: {
@@ -107,27 +139,28 @@ const Create = ({ productData }: { productData: any }) => {
           },
         }
       );
-      const data = await productExist.json();
-
-      if (data) {
-        const response = await fetch(
-          `${url}/api/productos/${productData.producto_id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(productos),
-          }
-        );
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(
-            errorData.message || `Error al crear producto: ${response.status}`
+      if (productExist.ok) {
+        const data = await productExist.json();
+        if (data) {
+          const response = await fetch(
+            `${url}/api/productos/${productData.producto_id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(productos),
+            }
           );
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.message || `Error al crear producto: ${response.status}`
+            );
+          }
+          setSubmitSuccess("Producto actualizado exitosamente!");
+          window.location.reload();
         }
-        setSubmitSuccess("Producto actualizado exitosamente!");
-        window.location.reload();
       } else {
         const response = await fetch(`${url}/api/productos`, {
           method: "POST",
@@ -153,7 +186,7 @@ const Create = ({ productData }: { productData: any }) => {
           stock: 0,
           categoria_id: "",
           proveedor_id: "",
-          estado: "activo",
+          estado: "disponible",
           marca: "",
           stock_minimo: 0,
           codigo: 0,
@@ -168,6 +201,8 @@ const Create = ({ productData }: { productData: any }) => {
     }
   };
 
+  console.log(productos);
+
   return (
     <section className="productForm w-full">
       <h1>Ingrese los Datos del Producto</h1>
@@ -180,7 +215,8 @@ const Create = ({ productData }: { productData: any }) => {
             id="nombre_producto"
             name="nombre_producto"
             onChange={handleChange}
-            value={productos.nombre_producto}
+            disabled={productData?.nombre_producto !== ""}
+            value={productos?.nombre_producto}
             required
           />
         </div>
@@ -222,7 +258,7 @@ const Create = ({ productData }: { productData: any }) => {
           ></textarea>
         </div>
 
-        <div className="form-group">
+        {/*<div className="form-group">
           <label htmlFor="precio_costo">Precio de costo:</label>
           <input
             type="number"
@@ -234,7 +270,7 @@ const Create = ({ productData }: { productData: any }) => {
             value={productos.precio_costo}
             required
           />
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label htmlFor="precio_venta">Precio de venta:</label>
@@ -273,25 +309,14 @@ const Create = ({ productData }: { productData: any }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="codigo">Codigo:</label>
-          <input
-            type="text"
-            id="codigo"
-            name="codigo"
-            onChange={handleChange}
-            value={productos.codigo}
-            required
-          />
-        </div>
-
-        <div className="form-group">
           <label htmlFor="marca">Marca:</label>
           <input
             type="text"
             id="marca"
             name="marca"
+            disabled={productData?.marca !== ""}
             onChange={handleChange}
-            value={productos.marca}
+            value={productos?.marca}
             required
           />
         </div>
@@ -307,6 +332,7 @@ const Create = ({ productData }: { productData: any }) => {
               name="categoria_id"
               onChange={handleChange}
               value={productos.categoria_id}
+              disabled={productData?.categoria_id !== ""}
               required
             >
               <option value="">Seleccione una categoría</option>
@@ -337,6 +363,7 @@ const Create = ({ productData }: { productData: any }) => {
               id="proveedor_id"
               onChange={handleChange}
               value={productos.proveedor_id}
+              disabled={productData?.proveedor_id !== ""}
               required
             >
               <option value="">Seleccione un proveedor</option>
@@ -360,10 +387,24 @@ const Create = ({ productData }: { productData: any }) => {
           >
             <option>Seleccione</option>
 
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
+            <option value="disponible">Disponible</option>
+            <option value="no disponible">No disponible</option>
           </select>
         </div>
+
+        <div className="form-group">
+          <label htmlFor="codigo">Sku:</label>
+          <input
+            type="text"
+            id="codigo"
+            name="codigo"
+            value={productSkuData || productData?.codigo}
+            onChange={handleChange}
+            disabled={true}
+            required
+          />
+        </div>
+
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Guardando..." : "Guardar Producto"}
         </button>
