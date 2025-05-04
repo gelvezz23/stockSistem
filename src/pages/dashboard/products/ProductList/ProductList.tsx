@@ -77,22 +77,25 @@ export const ProductList = () => {
         <table className="min-w-full bg-white shadow-md rounded-md">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-3 px-6 text-left font-semibold text-gray-700">
-                ID
+              <th className="py-2 px-6 text-left font-semibold text-gray-700">
+                Id
               </th>
-              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+              <th className="py-2 px-6 text-left font-semibold text-gray-700">
+                Codigo
+              </th>
+              <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Sku
               </th>
-              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+              <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Nombre
               </th>
-              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+              <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Stock
               </th>
-              <th className="py-3 px-6 text-left font-semibold text-gray-700">
+              <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Estado
               </th>
-              <th className="py-3 px-6 text-right font-semibold text-gray-700">
+              <th className="py-2 px-6 text-right font-semibold text-gray-700">
                 Acciones
               </th>
             </tr>
@@ -110,13 +113,16 @@ export const ProductList = () => {
                       <Create productData={product} />
                     </section>
                   </Modal>
-                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-700">
+                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.producto_id}
                   </td>
-                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-700">
+                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.codigo}
                   </td>
-                  <td className="py-3 px-6 text-left">
+                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
+                    {product.codigo}
+                  </td>
+                  <td className="py-2 px-6 text-left">
                     <div className="flex items-center text-gray-700">
                       {product.image_url && (
                         <img
@@ -128,10 +134,10 @@ export const ProductList = () => {
                       <span>{product.nombre_producto}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
+                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-900">
                     {product.stock}
                   </td>
-                  <td className="py-3 px-6 text-left whitespace-nowrap">
+                  <td className="py-2 px-6 text-left whitespace-nowrap">
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
                         product.estado === "disponible"
@@ -142,7 +148,7 @@ export const ProductList = () => {
                       {product.estado}
                     </span>
                   </td>
-                  <td className="py-3 px-6 text-right whitespace-nowrap text-gray-900">
+                  <td className="py-2 px-6 text-right whitespace-nowrap text-gray-900">
                     <div className="flex items-center justify-end">
                       <div
                         onClick={() => openModal(product.producto_id)}
