@@ -4,6 +4,7 @@ import "./styles.css";
 import Modal from "../../../components/Modal";
 import { FormsClient } from "./form";
 import useUpdateUserStatus from "../../../utils/hook/useUpdateStatus";
+import { FormsProveedor } from "../providers/form";
 
 export const UsersList = () => {
   const [users, setUsers] = useState<any>([]);
@@ -49,6 +50,7 @@ export const UsersList = () => {
     getUsers();
   }, []);
 
+  console.log(users);
   return (
     <section className="bg-gray-100 min-h-screen py-8">
       <div className="container mx-auto px-4">
@@ -85,11 +87,20 @@ export const UsersList = () => {
                     key={user.usuario_id}
                     className="border-b border-gray-200"
                   >
-                    <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                      <section className="h-[78vh] overflow-auto p-4">
-                        <FormsClient user={user} />
-                      </section>
-                    </Modal>
+                    {user.rol_id === 5 && (
+                      <Modal isOpen={isThisModalOpen} onClose={closeModal}>
+                        <section className="h-[78vh] overflow-auto p-4">
+                          <FormsProveedor user={user} />
+                        </section>
+                      </Modal>
+                    )}
+                    {user.rol_id === 4 && (
+                      <Modal isOpen={isThisModalOpen} onClose={closeModal}>
+                        <section className="h-[78vh] overflow-auto p-4">
+                          <FormsClient user={user} />
+                        </section>
+                      </Modal>
+                    )}
                     <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900">
                       {user.usuario_id}
                     </td>

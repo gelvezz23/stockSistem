@@ -57,14 +57,14 @@ export const Shop = () => {
           Lista de productos
         </h1>
         {errorState && <p className="text-red-500 mb-4">{errorState}</p>}
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="space-y-4">
           {products.map((user: any) => {
             const isThisModalOpen = openModalId === user.producto_id;
 
             return (
-              <div
+              <li
                 key={user.producto_id}
-                className="bg-white rounded-md shadow-md overflow-hidden"
+                className="bg-white rounded-md shadow-md overflow-hidden flex items-center"
               >
                 <Modal isOpen={isThisModalOpen} onClose={closeModal}>
                   <section className="h-[78vh] overflow-auto p-4">
@@ -74,16 +74,16 @@ export const Shop = () => {
                 <img
                   src={user.image_url}
                   alt={user.nombre_producto}
-                  className="w-full h-32 object-cover"
+                  className="w-32 h-32 object-cover mr-4"
                 />
-                <div className="p-4">
-                  <h5 className="text-lg font-semibold text-gray-700 mb-2">
+                <div className="p-4 flex-grow">
+                  <h5 className="text-lg font-semibold text-gray-700 mb-1">
                     {user.nombre_producto}
                   </h5>
                   <p className="text-sm text-gray-500 mb-1">
                     ID: {user.producto_id}
                   </p>
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <div className="flex items-center text-sm text-gray-600 mb-1">
                     <p className="mr-2">Stock: {user.stock}</p>
                     <p>
                       Estado:{" "}
@@ -98,28 +98,27 @@ export const Shop = () => {
                       </span>
                     </p>
                   </div>
-                  <div className="flex items-center justify-end mt-2">
-                    <div
-                      onClick={() => {
-                        handleAddProduct(user);
-                      }}
-                      className="cursor-pointer text-green-500 hover:text-green-700 mr-2"
-                    >
-                      agregar
-                    </div>
-
-                    <div
-                      onClick={() => openModal(user.producto_id)}
-                      className="cursor-pointer text-blue-500 hover:text-blue-700 mr-2"
-                    >
-                      ver detalle
-                    </div>
+                </div>
+                <div className="p-4 flex items-center">
+                  <div
+                    onClick={() => {
+                      handleAddProduct(user);
+                    }}
+                    className="cursor-pointer text-green-500 hover:text-green-700 mr-4"
+                  >
+                    agregar
+                  </div>
+                  <div
+                    onClick={() => openModal(user.producto_id)}
+                    className="cursor-pointer text-blue-500 hover:text-blue-700"
+                  >
+                    ver detalle
                   </div>
                 </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

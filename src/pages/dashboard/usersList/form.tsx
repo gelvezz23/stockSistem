@@ -8,7 +8,7 @@ export const FormsClient = ({ user }: { user: any }) => {
     direccion: "",
     telefono: "",
     email: "",
-    usuario_id: user.usuario_id,
+    usuario_id: user?.usuario_id,
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ export const FormsClient = ({ user }: { user: any }) => {
     const getClient = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACK_URL}/api/clientes/${user.usuario_id}`,
+          `${import.meta.env.VITE_BACK_URL}/api/clientes/${user?.usuario_id}`,
           {
             method: "GET",
             headers: {
@@ -89,16 +89,16 @@ export const FormsClient = ({ user }: { user: any }) => {
       }
     };
     getClient();
-  }, [user.usuario_id]);
+  }, [user?.usuario_id]);
 
   return (
     <section className="form-client-label">
       <div>
-        <h5>id: {user.usuario_id}</h5>
-        <p>{user.email}</p>
+        <h5>id: {user?.usuario_id}</h5>
+        <p>{user?.email}</p>
       </div>
       <div>
-        <p>rol: {user.name_rol}</p>
+        <p>rol: {user?.name_rol}</p>
       </div>
 
       <form id="clienteForm" onSubmit={handleSubmit}>

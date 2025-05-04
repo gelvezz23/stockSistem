@@ -31,6 +31,7 @@ const Create = ({ productData }: { productData: any }) => {
     marca: productData?.marca,
     stock_minimo: productData?.stock_minimo,
     codigo: productData?.codigo || productoSku,
+    sku: productData?.sku,
     image_url: productData?.image_url,
   });
   const productSkuData = generarSKU(
@@ -45,7 +46,7 @@ const Create = ({ productData }: { productData: any }) => {
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
     const { name, value } = event.target;
-    setProductos({ ...productos, [name]: value, codigo: productSkuData });
+    setProductos({ ...productos, [name]: value, sku: productSkuData });
 
     setProductoSku(productSkuData);
   };
@@ -190,6 +191,7 @@ const Create = ({ productData }: { productData: any }) => {
           marca: "",
           stock_minimo: 0,
           codigo: 0,
+          sku: "",
           image_url: "",
         });
       }
@@ -200,8 +202,6 @@ const Create = ({ productData }: { productData: any }) => {
       setIsSubmitting(false);
     }
   };
-
-  console.log(productos);
 
   return (
     <section className="productForm w-full">
@@ -215,7 +215,7 @@ const Create = ({ productData }: { productData: any }) => {
             id="nombre_producto"
             name="nombre_producto"
             onChange={handleChange}
-            disabled={productData?.nombre_producto !== ""}
+            disabled={productData?.nombre_producto}
             value={productos?.nombre_producto}
             required
           />
@@ -314,7 +314,7 @@ const Create = ({ productData }: { productData: any }) => {
             type="text"
             id="marca"
             name="marca"
-            disabled={productData?.marca !== ""}
+            disabled={productData?.marca}
             onChange={handleChange}
             value={productos?.marca}
             required
@@ -332,7 +332,7 @@ const Create = ({ productData }: { productData: any }) => {
               name="categoria_id"
               onChange={handleChange}
               value={productos.categoria_id}
-              disabled={productData?.categoria_id !== ""}
+              disabled={productData?.categoria_id}
               required
             >
               <option value="">Seleccione una categoría</option>
@@ -363,7 +363,7 @@ const Create = ({ productData }: { productData: any }) => {
               id="proveedor_id"
               onChange={handleChange}
               value={productos.proveedor_id}
-              disabled={productData?.proveedor_id !== ""}
+              disabled={productData?.proveedor_id}
               required
             >
               <option value="">Seleccione un proveedor</option>
@@ -393,12 +393,25 @@ const Create = ({ productData }: { productData: any }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="codigo">Sku:</label>
+          <label htmlFor="codigo">Codigo:</label>
           <input
             type="text"
             id="codigo"
             name="codigo"
-            value={productSkuData || productData?.codigo}
+            value={productos?.codigo}
+            onChange={handleChange}
+            disabled={productData?.codigo}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="sku">Sku:</label>
+          <input
+            type="text"
+            id="sku"
+            name="sku"
+            value={productos?.sku}
             onChange={handleChange}
             disabled={true}
             required

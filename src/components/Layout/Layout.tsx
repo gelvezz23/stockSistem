@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Outlet } from "react-router";
-import { Footer, Navbar } from ".";
+import { Navbar } from ".";
 
 const Layout = () => {
   return (
@@ -9,7 +9,6 @@ const Layout = () => {
       <main className="bg-gray-800 pt-16 pb-16 h-screen">
         <Outlet />
       </main>
-      <Footer />
     </>
   );
 };
