@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import { ProductDetails } from "../../components/productDetails";
 import { useCartStore } from "../../utils/zustand/store/useCartStore";
+import { NavLink } from "react-router";
+import ShoppingCartIconWithBadge from "../../components/ShoppingCartIcon";
 
 export const Shop = () => {
   const [products, setProducts] = useState<any>([]);
@@ -159,6 +161,12 @@ export const Shop = () => {
             );
           })}
         </ul>
+        <NavLink
+          to="/shoppingCart"
+          className=" flex gap-2 my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+        >
+          finalizar compra <ShoppingCartIconWithBadge />
+        </NavLink>
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useCartStore } from "../../utils/zustand/store/useCartStore";
 import Modal from "../../components/Modal";
 import { FormVentas } from "../../components/formVentas";
+import { NavLink } from "react-router";
 
 const ShoppingCartPage: React.FC = () => {
   const cartItems = useCartStore((state) => state.cartItems);
@@ -85,7 +86,7 @@ const ShoppingCartPage: React.FC = () => {
           {errorState && <p>{errorState}</p>}
         </section>
       </Modal>
-      <h2 className="text-2xl font-semibold mb-4">Carrito de Compras</h2>
+      <h2 className="text-2xl font-semibold mb-4">Tus compras</h2>
       <div className="shadow-md rounded-md overflow-hidden">
         <table className="min-w-full table-auto">
           <thead className="bg-gray-100">
@@ -167,7 +168,13 @@ const ShoppingCartPage: React.FC = () => {
           </tfoot>
         </table>
       </div>
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-end gap-2">
+        <NavLink
+          className="bg-blue-700 hover:bg-blue-500 text-white py-2 px-4 rounded font-semibold"
+          to="/dashboard/products/shop"
+        >
+          Seguir Comprando
+        </NavLink>
         <button
           onClick={openModal}
           className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded font-semibold"
