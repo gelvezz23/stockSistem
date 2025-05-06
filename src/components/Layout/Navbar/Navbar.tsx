@@ -1,6 +1,6 @@
 import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
 import { useCartStore } from "../../../utils/zustand/store/useCartStore";
-import ShoppingCartIconWithBadge from "../../ShoppingCartIcon";
+//import ShoppingCartIconWithBadge from "../../ShoppingCartIcon";
 import styles from "./Navbar.module.css";
 import { NavLink, useNavigate } from "react-router";
 const Navbar = () => {
@@ -19,9 +19,11 @@ const Navbar = () => {
     <header className={header}>
       <nav className={nav}>
         <ul className={list}>
+          {/**
           <li className={listItem}>
             <NavLink to="/">Inicio </NavLink>
           </li>
+           */}
           {storage?.thereIsAdmin && (
             <li className={listItem}>
               <NavLink to="/dashboard">Dashboard</NavLink>
@@ -43,9 +45,9 @@ const Navbar = () => {
               <li className={listItem}>
                 <NavLink to="/Login">Login</NavLink>
               </li>
-              <li className={listItem}>
+              {/**  <li className={listItem}>
                 <NavLink to="/Registro">Registro</NavLink>
-              </li>
+              </li> */}
             </>
           ) : (
             <li className={listItem}>
@@ -54,13 +56,13 @@ const Navbar = () => {
               </NavLink>
             </li>
           )}
-          {products.length > 0 && (
+          {/** products.length > 0 && (
             <li className={listItem}>
               <NavLink to="/shoppingCart">
                 <ShoppingCartIconWithBadge />
               </NavLink>
             </li>
-          )}
+          ) */}
         </ul>
       </nav>
     </header>

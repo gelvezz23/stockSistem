@@ -45,7 +45,8 @@ export const UsersList = () => {
       if (!response.ok) setError("Usuarios no encontrados");
 
       const data = await response.json();
-      setUsers(data);
+      const dataFull = data.filter((item: any) => item.rol_id !== 5);
+      setUsers(dataFull);
     };
     getUsers();
   }, []);
@@ -95,6 +96,13 @@ export const UsersList = () => {
                       </Modal>
                     )}
                     {user.rol_id === 4 && (
+                      <Modal isOpen={isThisModalOpen} onClose={closeModal}>
+                        <section className="h-[78vh] overflow-auto p-4">
+                          <FormsClient user={user} />
+                        </section>
+                      </Modal>
+                    )}
+                    {(user.rol_id === 3 || user.rol_id === 2) && (
                       <Modal isOpen={isThisModalOpen} onClose={closeModal}>
                         <section className="h-[78vh] overflow-auto p-4">
                           <FormsClient user={user} />

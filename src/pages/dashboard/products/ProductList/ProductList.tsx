@@ -7,7 +7,10 @@ import Create from "../create";
 export const ProductList = () => {
   const [products, setProducts] = useState<any>([]);
   const [errorState, setError] = useState<any>(null);
-  const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
+  const [openModalId, setOpenModalId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState<any>([]);
+
   const handleUpdateStatus = async (producto_id: number, estado: string) => {
     const response = await fetch(
       `${import.meta.env.VITE_BACK_URL}/api/productos/${producto_id}/estado`,
@@ -67,19 +70,58 @@ export const ProductList = () => {
     getProducts();
   }, []);
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+
+    const results = products.filter((product: any) =>
+      String(product.codigo)
+        .toLowerCase()
+        .includes(event.target.value.toLowerCase())
+    );
+    setFilteredProducts(results);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const results = products.filter((product: any) =>
+      String(product.codigo).toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProducts(results);
+  };
+
+  const productsToRender = searchTerm ? filteredProducts : products;
   return (
     <section className="bg-gray-100 min-h-screen py-8 overflow-x-auto">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Lista de productos
         </h1>
+
+        <form onSubmit={handleSearchSubmit} className="mb-4 flex">
+          <input
+            type="text"
+            placeholder="Buscar por código..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+          >
+            Buscar
+          </button>
+        </form>
+
         {errorState && <p className="text-red-500 mb-4">{errorState}</p>}
         <table className="min-w-full bg-white shadow-md rounded-md">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-2 px-6 text-left font-semibold text-gray-700">
+              {/**
+              *  <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Id
               </th>
+              */}
               <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Codigo
               </th>
@@ -101,7 +143,7 @@ export const ProductList = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product: any) => {
+            {productsToRender.map((product: any) => {
               const isThisModalOpen = openModalId === product.producto_id;
               return (
                 <tr
@@ -113,14 +155,14 @@ export const ProductList = () => {
                       <Create productData={product} />
                     </section>
                   </Modal>
-                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
+                  {/** <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.producto_id}
-                  </td>
+                  </td> */}
                   <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.codigo}
                   </td>
                   <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
-                    {product.codigo}
+                    {product.sku}
                   </td>
                   <td className="py-2 px-6 text-left">
                     <div className="flex items-center text-gray-700">

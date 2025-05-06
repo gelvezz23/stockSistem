@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import { Layout } from "../components/Layout";
-import Inicio from "../pages/Inicio";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import { useSessionStorage } from "../utils/hook/useSessionStorage";
@@ -41,7 +40,7 @@ export const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Inicio />,
+        element: <Login />,
       },
       {
         element: <ProtectedRoute />,
@@ -74,6 +73,10 @@ export const routes = createBrowserRouter([
             path: "dashboard",
             element: <Dashboard />,
             children: [
+              {
+                index: true,
+                element: <LowStockProductsList />,
+              },
               {
                 path: "products/create",
                 element: <CreateProducts productData={undefined} />,

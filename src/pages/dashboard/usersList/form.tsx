@@ -93,13 +93,13 @@ export const FormsClient = ({ user }: { user: any }) => {
 
   return (
     <section className="form-client-label">
-      <div>
+      {/** <div>
         <h5>id: {user?.usuario_id}</h5>
         <p>{user?.email}</p>
       </div>
       <div>
         <p>rol: {user?.name_rol}</p>
-      </div>
+      </div> */}
 
       <form id="clienteForm" onSubmit={handleSubmit}>
         <div>
