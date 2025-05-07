@@ -44,14 +44,16 @@ const Register = ({ onDashboard = false }) => {
 
       if (data && onDashboard) {
         setValue(data);
+        window.location.reload();
       }
+      window.location.reload();
     }
   };
 
   return (
-    <section className="flex items-center flex-col justify-center min-h-screen">
+    <section className="flex items-center flex-col justify-center">
       <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 md:w-1/2 lg:w-1/3"
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 "
         onSubmit={handleSubmit}
       >
         <div className="mb-4">

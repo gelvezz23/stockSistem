@@ -9,6 +9,7 @@ const ShoppingCartPage: React.FC = () => {
   const cartItems = useCartStore((state) => state.cartItems);
   const removeProduct = useCartStore((state) => state.removeProduct); // Asumimos que tienes una función para remover
   const updateQuantity = useCartStore((state) => state.updateQuantity); // Asumimos una función para actualizar la cantidad
+  const clearCart = useCartStore((state) => state.clearCart);
 
   const [clients, setClients] = useState<any>([]);
   const [auxiliar, setAuxiliar] = useState<any>([]);
@@ -34,15 +35,32 @@ const ShoppingCartPage: React.FC = () => {
       if (!response.ok) setError("Usuarios no encontrados");
 
       const data = await response.json();
-      const filterClient = data.filter(
-        (item: { rol_id: number }) => item.rol_id === 4
-      );
+
       const filterAuxiliar = data.filter(
         (item: { rol_id: number }) => item.rol_id === 2
       );
 
-      setClients(filterClient);
       setAuxiliar(filterAuxiliar);
+    };
+    getUsers();
+  }, []);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}/api/clientes`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) setError("Usuarios no encontrados");
+
+      const data = await response.json();
+
+      setClients(data);
     };
     getUsers();
   }, []);
@@ -199,6 +217,13 @@ const ShoppingCartPage: React.FC = () => {
         </table>
       </div>
       <div className="mt-6 flex justify-end gap-2">
+        <button
+          onClick={() => clearCart()}
+          className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded font-semibold"
+        >
+          Limpiar
+        </button>
+
         <NavLink
           className="bg-blue-700 hover:bg-blue-500 text-white py-2 px-4 rounded font-semibold"
           to="/dashboard/products/shop"

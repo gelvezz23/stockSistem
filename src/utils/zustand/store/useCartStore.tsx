@@ -7,6 +7,7 @@ interface CartState {
   addProduct: (product: any) => void;
   removeProduct: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -55,10 +56,14 @@ export const useCartStore = create<CartState>()(
               ? {
                   ...item,
                   quantity: Math.max(1, Math.min(quantity, item.stock)),
-                } // Asegurar que la cantidad esté entre 1 y el stock
+                }
               : item
           ),
         }));
+      },
+      clearCart: () => {
+        // Implementación de la función clearCart
+        set({ cartItems: [] });
       },
     }),
     {
