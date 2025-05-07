@@ -64,9 +64,15 @@ const ShoppingCartPage: React.FC = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="container mx-auto py-8">
-        <h2 className="text-2xl font-semibold mb-4">Carrito de Compras</h2>
-        <p className="text-gray-600">Tu carrito está vacío.</p>
+      <div className="container mx-auto py-8 flex flex-col gap-2">
+        <h2 className="text-2xl font-semibold mb-4">Lista de compras</h2>
+        <p className="text-gray-600">Está vacío.</p>
+        <NavLink
+          className="bg-blue-700 hover:bg-blue-500 text-white py-2 px-4 rounded font-semibold"
+          to="/dashboard/products/shop"
+        >
+          Seguir Comprando
+        </NavLink>
         {/* Opcional: Un enlace para volver a la página de productos */}
       </div>
     );
@@ -76,7 +82,7 @@ const ShoppingCartPage: React.FC = () => {
   return (
     <div className="container mx-auto py-8">
       <Modal isOpen={openModalId} onClose={openModal}>
-        <section className="h-[78vh] overflow-auto p-4">
+        <>
           <FormVentas
             clients={clients}
             auxiliaries={auxiliar}
@@ -84,7 +90,7 @@ const ShoppingCartPage: React.FC = () => {
             products={cartItems}
           />
           {errorState && <p>{errorState}</p>}
-        </section>
+        </>
       </Modal>
       <h2 className="text-2xl font-semibold mb-4">Tus compras</h2>
       <div className="shadow-md rounded-md overflow-hidden">
@@ -158,10 +164,34 @@ const ShoppingCartPage: React.FC = () => {
                 colSpan={3}
                 className="py-3 px-4 text-right font-semibold text-gray-900"
               >
-                Total:
+                Subtotal:
               </td>
               <td className="py-3 px-4 text-center font-semibold text-gray-900">
                 ${calculateTotalPrice().toLocaleString("es-CO")}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td
+                colSpan={3}
+                className="py-3 px-4 text-right font-semibold text-gray-900"
+              >
+                IVA (19%):
+              </td>
+              <td className="py-3 px-4 text-center font-semibold text-gray-900">
+                ${(calculateTotalPrice() * 0.19).toLocaleString("es-CO")}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td
+                colSpan={3}
+                className="py-3 px-4 text-right font-semibold text-gray-900"
+              >
+                Total:
+              </td>
+              <td className="py-3 px-4 text-center font-semibold text-gray-900">
+                ${(calculateTotalPrice() * 1.19).toLocaleString("es-CO")}
               </td>
               <td></td>
             </tr>

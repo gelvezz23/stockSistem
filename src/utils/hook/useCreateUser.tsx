@@ -5,7 +5,10 @@ interface IUser {
   name: string;
   email: string;
   password?: string;
-  rol_id: number; // Asumiendo que tienes un rol_id en tu formulario
+  documento?: string;
+  telefono?: string;
+  direccion?: string;
+  rol_id: number;
 }
 
 function useCreateUser(url: string) {
@@ -25,10 +28,13 @@ function useCreateUser(url: string) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nombre_usuario: userData.name, // Mapea 'name' al campo 'nombre_usuario' de tu backend
+          nombre_usuario: userData.name,
           email: userData.email,
           contrasena: userData.password,
           rol_id: userData.rol_id,
+          documento: userData.documento,
+          telefono: userData.telefono,
+          direccion: userData.direccion,
         }),
       });
 

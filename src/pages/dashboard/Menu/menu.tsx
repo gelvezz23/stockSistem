@@ -10,7 +10,7 @@ const Menu = () => {
       <ul className="list-none pl-0">
         <li className="mb-1">
           <NavLink
-            to="providers/create"
+            to="providers/list"
             className={({ isActive }) =>
               `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
                 isActive ? "bg-blue-500 text-white" : ""
@@ -18,6 +18,18 @@ const Menu = () => {
             }
           >
             Ver Proveedor
+          </NavLink>
+        </li>
+        <li className="mb-1">
+          <NavLink
+            to="providers/create"
+            className={({ isActive }) =>
+              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                isActive ? "bg-blue-500 text-white" : ""
+              }`
+            }
+          >
+            Crear Proveedor
           </NavLink>
         </li>
       </ul>

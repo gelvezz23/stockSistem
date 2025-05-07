@@ -15,6 +15,7 @@ import { Tecnico } from "../pages/perfil/tecnico";
 import { Shop } from "../pages/Shop";
 import ShoppingCartPage from "../pages/ShoppingCart";
 import { Ventas } from "../pages/dashboard/ventas";
+import { FormsProveedor } from "../pages/dashboard/providers/form";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -26,6 +27,7 @@ export const ProtectedRoute = () => {
 
 export const PrivateRoute = () => {
   const { storage } = useSessionStorage("user", null);
+  console.log("PPPP", storage);
   if (storage) {
     return <Outlet />;
   }
@@ -90,8 +92,12 @@ export const routes = createBrowserRouter([
                 element: <Shop />,
               },
               {
-                path: "providers/create",
+                path: "providers/list",
                 element: <ProveedorList />,
+              },
+              {
+                path: "providers/create",
+                element: <FormsProveedor />,
               },
               {
                 path: "users/create",

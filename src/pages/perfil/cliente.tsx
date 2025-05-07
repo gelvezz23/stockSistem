@@ -99,15 +99,11 @@ export const Cliente = () => {
   return (
     <div className="bg-gray-100 min-h-screen py-8">
       <Modal isOpen={viewModalEdit} onClose={handleEditClickEdit}>
-        <section className="h-[78vh] overflow-auto p-4">
-          <FormsClient user={clientsState} />
-        </section>
+        <FormsClient user={clientsState} />
       </Modal>
 
       <Modal isOpen={viewModalServicio} onClose={handleEditClickServicio}>
-        <section className="h-[78vh] overflow-auto p-4">
-          <FormServicioTecnico />
-        </section>
+        <FormServicioTecnico />
       </Modal>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

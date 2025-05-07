@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
-export const FormsProveedor = ({ user }: { user: any }) => {
+export const FormsProveedor = ({ proveedor_id }: { proveedor_id?: any }) => {
   const [clientsState, setClientState] = useState<any>({
     nombre_proveedor: "",
     nit: "",
     direccion: "",
     telefono: "",
     email: "",
-    usuario_id: user.usuario_id,
+    proveedor_id,
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ export const FormsProveedor = ({ user }: { user: any }) => {
     const getClient = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACK_URL}/api/proveedores/${user.usuario_id}`,
+          `${import.meta.env.VITE_BACK_URL}/api/proveedores/${proveedor_id}`,
           {
             method: "GET",
             headers: {
@@ -64,7 +64,7 @@ export const FormsProveedor = ({ user }: { user: any }) => {
           }
         );
 
-        if (!response.ok) {
+        if (!response.ok && proveedor_id) {
           const errorData = await response.json();
           setError(
             errorData.message || `Usuario no encontrado: ${response.status}`
@@ -79,27 +79,20 @@ export const FormsProveedor = ({ user }: { user: any }) => {
           direccion: data.direccion,
           telefono: data.telefono,
           email: data.email,
-          usuario_id: data.usuario_id,
+          proveedor_id: data.proveedor_id,
         });
         setLoading(false);
       } catch (err: any) {
         setLoading(false);
-        setError(err.message || "Error desconocido al tomar cliente");
+        if (proveedor_id)
+          setError(err.message || "Error desconocido al tomar cliente");
       }
     };
     getClient();
-  }, [user.usuario_id]);
+  }, [proveedor_id]);
 
   return (
-    <section className="form-client-label">
-      <div>
-        <h5>id: {user.usuario_id}</h5>
-        <p>{user.email}</p>
-      </div>
-      <div>
-        <p>rol: {user.name_rol}</p>
-      </div>
-
+    <section className="form-client-label bg-gray-100 p-4">
       <form id="clienteForm" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="nombre_proveedor">Nombre del proveedor:</label>

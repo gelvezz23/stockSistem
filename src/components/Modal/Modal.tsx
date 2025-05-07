@@ -35,7 +35,12 @@ const Modal = ({
             </svg>
           </button>
         </div>
-        <div className="p-[10px]">{children}</div>
+        <div
+          className="flex flex-col items-center"
+          style={{ maxHeight: "70vh", overflow: "auto" }}
+        >
+          {children}
+        </div>
       </div>
     </div>,
     modalRoot

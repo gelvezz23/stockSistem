@@ -60,7 +60,14 @@ export const FormVentas: FC<{
     >
       <div className="mb-4">
         <p className="text-gray-900">
-          Precio Total: $ {parseInt(totalPrice).toLocaleString("es-CO")}
+          Subtotal: $ {parseInt(totalPrice).toLocaleString("es-CO")}
+        </p>
+        <p className="text-gray-900">
+          IVA (19%): $ {(parseInt(totalPrice) * 0.19).toLocaleString("es-CO")}
+        </p>
+        <p className="text-gray-900 font-semibold">
+          Precio Total (con IVA): ${" "}
+          {(parseInt(totalPrice) * 1.19).toLocaleString("es-CO")}
         </p>
       </div>
       <div className="mb-4">

@@ -20,9 +20,7 @@ export const ProductCard = ({ product }: { product: any }) => {
   return (
     <div className="producto-card">
       <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-        <section className="h-[78vh] overflow-auto p-4">
-          <ProductDetails product={product} />
-        </section>
+        <ProductDetails product={product} />
       </Modal>
       <img
         src={product.image_url}

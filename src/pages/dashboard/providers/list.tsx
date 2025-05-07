@@ -10,15 +10,14 @@ const ProveedorList = () => {
   const [users, setUsers] = useState<any>([]);
   const [errorState, setError] = useState<any>(null);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
-
-  const { updateUserStatus } = useUpdateUserStatus();
+  const { updateProveedorStatus } = useUpdateUserStatus();
 
   const handleUpdateStatus = async (userId: number, estado: string) => {
-    await updateUserStatus({ usuario_id: userId, estado });
+    await updateProveedorStatus({ usuario_id: userId, estado });
     // Actualizar el estado local para reflejar el cambio sin recargar
     setUsers((prevUsers: any[]) =>
       prevUsers.map((user) =>
-        user.usuario_id === userId ? { ...user, estado } : user
+        user.proveedor_id === userId ? { ...user, estado } : user
       )
     );
   };
@@ -66,9 +65,7 @@ const ProveedorList = () => {
               <th className="py-3 px-6 text-left font-semibold text-gray-700">
                 Email
               </th>
-              <th className="py-3 px-6 text-left font-semibold text-gray-700">
-                Rol
-              </th>
+
               <th className="py-3 px-6 text-left font-semibold text-gray-700">
                 Estado
               </th>
@@ -79,27 +76,27 @@ const ProveedorList = () => {
           </thead>
           <tbody>
             {users.map((user: any) => {
-              const isThisModalOpen = openModalId === user.usuario_id;
+              console.log(user);
+              const isThisModalOpen = openModalId === user.proveedor_id;
               return (
-                <tr key={user.usuario_id} className="border-b border-gray-200">
+                <tr
+                  key={user.proveedor_id}
+                  className="border-b border-gray-200"
+                >
                   <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                    <section className="h-[78vh] overflow-auto p-4">
-                      <FormsProveedor user={user} />
-                    </section>
+                    <FormsProveedor proveedor_id={user.proveedor_id} />
                   </Modal>
                   <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
-                    {user.usuario_id}
+                    {user.proveedor_id}
                   </td>
                   <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
                     {user.email}
                   </td>
-                  <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
-                    {user.name_rol}
-                  </td>
+
                   <td className="py-3 px-6 text-left whitespace-nowrap">
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                        user.estado === "disponible"
+                        user.estado === "activo"
                           ? "bg-green-200 text-green-800"
                           : "bg-red-200 text-red-800"
                       }`}
@@ -110,7 +107,7 @@ const ProveedorList = () => {
                   <td className="py-3 px-6 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end">
                       <div
-                        onClick={() => openModal(user.usuario_id)}
+                        onClick={() => openModal(user.proveedor_id)}
                         className="cursor-pointer text-blue-500 hover:text-blue-700 mr-4"
                       >
                         <svg
@@ -132,7 +129,7 @@ const ProveedorList = () => {
                       <button
                         onClick={() => {
                           handleUpdateStatus(
-                            user.usuario_id,
+                            user.proveedor_id,
                             user.estado === "activo" ? "inactivo" : "activo"
                           );
                         }}

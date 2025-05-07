@@ -5,7 +5,6 @@ import { useSessionStorage } from "../../utils/hook/useSessionStorage";
 import useLogin from "../../utils/hook/useLogin";
 const Login = () => {
   const { login, user, loading, error, isLoggedIn } = useLogin();
-
   const { setValue } = useSessionStorage("user", null);
   const navigate = useNavigate();
   const [err, setError] = useState("");
@@ -29,21 +28,22 @@ const Login = () => {
       if (error) {
         setError(error || "");
       }
-      // La navegación ahora se maneja en el useEffect
     }
   };
 
   useEffect(() => {
     if (user && isLoggedIn && !loading) {
       const thereIsAdmin = user?.rol_id === 1;
+      const thereIsClient = user?.rol_id === 4;
       setValue({ user, thereIsAdmin });
       if (thereIsAdmin) {
-        navigate(0);
-      } else {
-        navigate(0); // O la ruta a la que deben ir los usuarios no admin
+        navigate("/dashboard");
+      }
+      if (thereIsClient) {
+        navigate("/perfil/cliente");
       }
     }
-  }, [user, isLoggedIn, loading]);
+  }, [user, isLoggedIn, loading, user?.rol_id]);
 
   return (
     <section className="flex items-center justify-center min-h-screen">

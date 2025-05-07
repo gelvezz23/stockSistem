@@ -1,6 +1,6 @@
 import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
 import { useCartStore } from "../../../utils/zustand/store/useCartStore";
-import ShoppingCartIconWithBadge from "../../ShoppingCartIcon";
+//import ShoppingCartIconWithBadge from "../../ShoppingCartIcon";
 import styles from "./Navbar.module.css";
 import { NavLink, useNavigate } from "react-router";
 const Navbar = () => {
@@ -56,13 +56,13 @@ const Navbar = () => {
               </NavLink>
             </li>
           )}
-          {products.length > 0 && (
+          {/*products.length > 0 && (
             <li className={listItem}>
               <NavLink to="/shoppingCart" className="flex gap-2">
                 finalizar compra <ShoppingCartIconWithBadge />
               </NavLink>
             </li>
-          )}
+          )*/}
         </ul>
       </nav>
     </header>

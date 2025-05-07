@@ -151,9 +151,7 @@ export const ProductList = () => {
                   className="border-b border-gray-200"
                 >
                   <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                    <section className="h-[78vh] overflow-auto p-4">
-                      <Create productData={product} />
-                    </section>
+                    <Create productData={product} />
                   </Modal>
                   {/** <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.producto_id}
