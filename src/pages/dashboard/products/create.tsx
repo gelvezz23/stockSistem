@@ -14,11 +14,11 @@ const Create = ({ productData }: { productData: any }) => {
   const [proveedores, setProveedores] = useState<any[]>([]); // Estado para proveedores
   const [proveedoresError, setProveedoresError] = useState<string | null>(null);
   const [proveedoresLoading, setProveedoresLoading] = useState(true);
-
+  const [moreStock, setMoreStock] = useState<any>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [viewInputStock, setViewInputStock] = useState(false);
   const [productos, setProductos] = useState({
     nombre_producto: productData?.nombre_producto,
     descripcion: productData?.descripcion,
@@ -41,8 +41,6 @@ const Create = ({ productData }: { productData: any }) => {
     productos?.categoria_id,
     productos?.marca
   );
-
-  console.log(productSkuData);
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
     const { name, value } = event.target;
@@ -150,7 +148,10 @@ const Create = ({ productData }: { productData: any }) => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(productos),
+              body: JSON.stringify({
+                ...productos,
+                stock: Number(productos.stock) + Number(moreStock),
+              }),
             }
           );
           if (!response.ok) {
@@ -168,7 +169,10 @@ const Create = ({ productData }: { productData: any }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(productos),
+          body: JSON.stringify({
+            ...productos,
+            stock: Number(productos.stock) + Number(moreStock),
+          }),
         });
 
         if (!response.ok) {
@@ -208,9 +212,10 @@ const Create = ({ productData }: { productData: any }) => {
       <h1>Ingrese los Datos del Producto</h1>
 
       <form id="productoForm" onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="form-group w-full">
           <label htmlFor="nombre_producto">Nombre del Producto:</label>
           <input
+            className="w-full"
             type="text"
             id="nombre_producto"
             name="nombre_producto"
@@ -222,16 +227,50 @@ const Create = ({ productData }: { productData: any }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="stock">Cantidad:</label>
-          <input
-            min="1"
-            type="number"
-            id="stock"
-            name="stock"
-            onChange={handleChange}
-            value={productos.stock}
-            required
-          />
+          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div>
+              <label htmlFor="stock">Cantidad:</label>
+              <input
+                min="1"
+                type="number"
+                id="stock"
+                name="stock"
+                disabled={productData?.stock}
+                onChange={handleChange}
+                value={Number(productos.stock) + Number(moreStock)}
+                required
+              />
+            </div>
+            <div>
+              <label>
+                <br />
+              </label>
+              <button
+                className=" flex bg-gray-800 p-2"
+                type="button"
+                onClick={() => {
+                  setViewInputStock(!viewInputStock);
+                  setMoreStock(0);
+                }}
+              >
+                {viewInputStock ? "X" : "+ agregar mas cantidad"}
+              </button>
+            </div>
+
+            {viewInputStock && (
+              <div>
+                <label htmlFor="stock">Agregar:</label>
+                <input
+                  min="1"
+                  type="number"
+                  id="stock"
+                  name="moreStock"
+                  onChange={(e) => setMoreStock(Number(e.target.value))}
+                  value={moreStock === 0 ? "" : moreStock}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="form-group">
