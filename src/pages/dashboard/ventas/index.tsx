@@ -3,12 +3,21 @@ import { useEffect, useState } from "react";
 
 export const Ventas = () => {
   const [ventasAgrupadas, setVentasAgrupadas] = useState<any[]>([]);
+  const [newQuantities, setNewQuantities] = useState<
+    Record<number, number | null>
+  >({});
   const [selectedVentaId, setSelectedVentaId] = useState<number | null>(null);
   const [isChanging, setIsChanging] = useState(false);
   const [productsToChange, setProductsToChange] = useState<any[]>([]);
   const [availableProducts, setAvailableProducts] = useState<any[]>([]);
   const [selectedChangeProducts, setSelectedChangeProducts] = useState<
     Record<number, number | null>
+  >({});
+  const [changeReasons, setChangeReasons] = useState<Record<number, string>>(
+    {}
+  );
+  const [changeObservations, setChangeObservations] = useState<
+    Record<number, string>
   >({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -18,6 +27,9 @@ export const Ventas = () => {
     setIsChanging(false); // Reset cambio state when a new venta is selected/unselected
     setProductsToChange([]);
     setSelectedChangeProducts({});
+    setNewQuantities({});
+    setChangeReasons({}); // Reset change reasons
+    setChangeObservations({});
   };
 
   const handleHacerCambioClick = (detalles: any[]) => {
@@ -25,6 +37,37 @@ export const Ventas = () => {
     setProductsToChange(detalles);
     // Fetch available products for change
     fetchAvailableProducts();
+    const initialQuantities: Record<number, number | null> = {};
+    const initialReasons: Record<number, string> = {};
+    const initialObservations: Record<number, string> = {};
+    detalles.forEach((detalle) => {
+      initialQuantities[detalle.detalle_id] = detalle.cantidad;
+      initialReasons[detalle.detalle_id] = ""; // Inicializar con cadena vacía
+      initialObservations[detalle.detalle_id] = ""; // Inicializar con cadena vacía
+    });
+    setNewQuantities(initialQuantities);
+    setChangeReasons(initialReasons);
+    setChangeObservations(initialObservations);
+  };
+  const handleReasonChange = (detalleId: number, value: string) => {
+    setChangeReasons((prev) => ({
+      ...prev,
+      [detalleId]: value,
+    }));
+  };
+
+  const handleObservationsChange = (detalleId: number, value: string) => {
+    setChangeObservations((prev) => ({
+      ...prev,
+      [detalleId]: value,
+    }));
+  };
+
+  const handleNewQuantityChange = (detalleId: number, value: string) => {
+    setNewQuantities((prev) => ({
+      ...prev,
+      [detalleId]: Number(value),
+    }));
   };
 
   const fetchAvailableProducts = async () => {
@@ -66,36 +109,35 @@ export const Ventas = () => {
 
   const handleSaveChanges = async (ventaId: number, detalles: any[]) => {
     const changes = detalles.map((detalle) => ({
+      venta_original_id: detalle.venta_id,
+      producto_original_id: detalle.producto_id,
+      cantidad_original: detalle.cantidad,
       detalle_id: detalle.detalle_id,
-      nuevo_producto_id:
-        selectedChangeProducts[detalle.detalle_id] || detalle.producto_id, // Default to original if no change
+      cantidad_nueva: newQuantities[detalle.detalle_id],
+      producto_nuevo_id:
+        selectedChangeProducts[detalle.detalle_id] || detalle.producto_id,
+      fecha_cambio: new Date(),
+      motivo_cambio: changeReasons[detalle.detalle_id], // Incluir el motivo
+      observaciones: changeObservations[detalle.detalle_id], // Incluir las observaciones
     }));
 
+    console.log(detalles, ventaId);
+
     // Filter out changes where the new product is the same or the price is lower
+
     const validChanges = changes.filter((change) => {
-      const originalProduct = detalles.find(
-        (d) => d.detalle_id === change.detalle_id
-      );
-      const newProduct = availableProducts.find(
-        (p) => p.producto_id === change.nuevo_producto_id
-      );
-      return (
-        change.nuevo_producto_id !== originalProduct?.producto_id &&
-        newProduct?.precio >= originalProduct?.precio_unitario
-      );
+      return change.producto_original_id !== change.producto_nuevo_id;
     });
 
     if (validChanges.length === 0) {
-      setError(
-        "No se seleccionaron cambios válidos (mismo producto o precio menor)."
-      );
+      setError("No se seleccionaron cambios válidos (mismo producto).");
       return;
     }
 
     try {
       setLoading(true);
       const response = await fetch(
-        `${import.meta.env.VITE_BACK_URL}/api/ventas/${ventaId}/cambio`, // Assuming you have an API endpoint for product changes
+        `${import.meta.env.VITE_BACK_URL}/api/cambios`, // Assuming you have an API endpoint for product changes
         {
           method: "POST",
           headers: {
@@ -238,8 +280,8 @@ export const Ventas = () => {
                                     {availableProducts
                                       .filter(
                                         (product) =>
-                                          Number(product.precio_venta) >=
-                                          Number(detalle.precio_unitario)
+                                          Number(product.producto_id) !==
+                                          Number(detalle.producto_id)
                                       )
                                       .map((product: any) => (
                                         <option
@@ -257,7 +299,79 @@ export const Ventas = () => {
                               )}
                             <span className="font-semibold">
                               Cantidad: {detalle.cantidad}
+                              {isChanging &&
+                                productsToChange.some(
+                                  (p) => p.detalle_id === detalle.detalle_id
+                                ) && (
+                                  <input
+                                    name="newQuantity"
+                                    value={
+                                      newQuantities[detalle.detalle_id] || ""
+                                    }
+                                    onChange={(e) =>
+                                      handleNewQuantityChange(
+                                        detalle.detalle_id,
+                                        e.target.value
+                                      )
+                                    }
+                                    type="number"
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                  />
+                                )}
                             </span>
+                            {isChanging &&
+                              productsToChange.some(
+                                (p) => p.detalle_id === detalle.detalle_id
+                              ) && (
+                                <>
+                                  <div className="mt-2">
+                                    <label
+                                      htmlFor={`change-reason-${detalle.detalle_id}`}
+                                      className="block text-gray-700 text-sm font-bold mb-1"
+                                    >
+                                      Motivo del Cambio:
+                                    </label>
+                                    <input
+                                      type="text"
+                                      id={`change-reason-${detalle.detalle_id}`}
+                                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                      value={
+                                        changeReasons[detalle.detalle_id] || ""
+                                      }
+                                      onChange={(e) =>
+                                        handleReasonChange(
+                                          detalle.detalle_id,
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <div className="mt-2">
+                                    <label
+                                      htmlFor={`change-observations-${detalle.detalle_id}`}
+                                      className="block text-gray-700 text-sm font-bold mb-1"
+                                    >
+                                      Observaciones:
+                                    </label>
+                                    <textarea
+                                      id={`change-observations-${detalle.detalle_id}`}
+                                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                      value={
+                                        changeObservations[
+                                          detalle.detalle_id
+                                        ] || ""
+                                      }
+                                      onChange={(e) =>
+                                        handleObservationsChange(
+                                          detalle.detalle_id,
+                                          e.target.value
+                                        )
+                                      }
+                                      rows={3}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             <span className="font-semibold">
                               Subtotal: $
                               {parseInt(detalle.subtotal).toLocaleString(

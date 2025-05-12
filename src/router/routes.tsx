@@ -16,6 +16,7 @@ import { Shop } from "../pages/Shop";
 import ShoppingCartPage from "../pages/ShoppingCart";
 import { Ventas } from "../pages/dashboard/ventas";
 import { FormsProveedor } from "../pages/dashboard/providers/form";
+import ListaDeCambios from "../pages/dashboard/cambios";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -108,6 +109,7 @@ export const routes = createBrowserRouter([
               { path: "alerts", element: <LowStockProductsList /> },
               { path: "shoppingCart", element: <ShoppingCartPage /> },
               { path: "ventas", element: <Ventas /> },
+              { path: "cambios", element: <ListaDeCambios /> },
             ],
           },
         ],
