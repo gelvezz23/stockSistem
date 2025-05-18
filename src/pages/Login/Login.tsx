@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import ErrorComponent from "../../components/ErrorComponent";
 import { useSessionStorage } from "../../utils/hook/useSessionStorage";
 import useLogin from "../../utils/hook/useLogin";
 const Login = () => {
-  const { login, user, loading, error, isLoggedIn } = useLogin();
+  const { login, loading, error } = useLogin();
   const { setValue } = useSessionStorage("user", null);
   const navigate = useNavigate();
   const [err, setError] = useState("");
@@ -24,26 +24,26 @@ const Login = () => {
     if (!valueForm.email || !valueForm.password) {
       setError("Por favor no envies campos vacios");
     } else {
-      await login({ ...valueForm });
+      const dataUser = await login({ ...valueForm });
+
+      const thereIsAdmin = dataUser?.rol_id === 1;
+      const thereIsClient = dataUser?.rol_id === 4;
+      const thereIsTecnico = dataUser?.rol_id === 3;
+      setValue({ user: dataUser, thereIsAdmin });
+      if (thereIsAdmin) {
+        navigate("/dashboard", { replace: true });
+      }
+      if (thereIsClient) {
+        navigate("/perfil/cliente", { replace: true });
+      }
+      if (thereIsTecnico) {
+        navigate("/perfil/tecnico", { replace: true });
+      }
       if (error) {
         setError(error || "");
       }
     }
   };
-
-  useEffect(() => {
-    if (user && isLoggedIn && !loading) {
-      const thereIsAdmin = user?.rol_id === 1;
-      const thereIsClient = user?.rol_id === 4;
-      setValue({ user, thereIsAdmin });
-      if (thereIsAdmin) {
-        navigate("/dashboard");
-      }
-      if (thereIsClient) {
-        navigate("/perfil/cliente");
-      }
-    }
-  }, [user, isLoggedIn, loading, user?.rol_id]);
 
   return (
     <section className="flex items-center justify-center min-h-screen">

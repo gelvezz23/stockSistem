@@ -11,12 +11,15 @@ import { UsersList } from "../pages/dashboard/usersList/UsersList";
 import { ProductList } from "../pages/dashboard/products/ProductList/ProductList";
 import LowStockProductsList from "../pages/LowStock";
 import { Cliente } from "../pages/perfil/cliente";
-import { Tecnico } from "../pages/perfil/tecnico";
 import { Shop } from "../pages/Shop";
 import ShoppingCartPage from "../pages/ShoppingCart";
 import { Ventas } from "../pages/dashboard/ventas";
 import { FormsProveedor } from "../pages/dashboard/providers/form";
 import ListaDeCambios from "../pages/dashboard/cambios";
+import CrearCita from "../pages/dashboard/citas/crear";
+import ListarCitas from "../pages/dashboard/citas/ListarCitas";
+import ListarCitasPerfil from "../pages/perfil/tecnico/agenda";
+import { Tecnico } from "../pages/perfil/tecnico";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -65,7 +68,14 @@ export const routes = createBrowserRouter([
           {
             path: "perfil/tecnico",
             element: <Tecnico />,
+            children: [
+              {
+                path: "agenda",
+                element: <ListarCitasPerfil />,
+              },
+            ],
           },
+
           { path: "shoppingCart", element: <ShoppingCartPage /> },
         ],
       },
@@ -110,6 +120,8 @@ export const routes = createBrowserRouter([
               { path: "shoppingCart", element: <ShoppingCartPage /> },
               { path: "ventas", element: <Ventas /> },
               { path: "cambios", element: <ListaDeCambios /> },
+              { path: "citas/agendar", element: <CrearCita /> },
+              { path: "citas/list", element: <ListarCitas /> },
             ],
           },
         ],

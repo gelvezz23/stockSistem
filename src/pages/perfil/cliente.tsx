@@ -117,13 +117,6 @@ export const Cliente = () => {
           >
             Editar
           </button>
-
-          <button
-            onClick={handleEditClickServicio}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Crear servicio tecnico
-          </button>
         </div>
         <div className="bg-white shadow overflow-hidden rounded-md">
           <div className="px-4 py-5 sm:px-6">

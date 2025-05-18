@@ -20,6 +20,13 @@ export const useSessionStorage = (key: string, initialValue: any) => {
         const valueStorage = value instanceof Function ? value(storage) : value;
         setStorage(valueStorage);
         window.sessionStorage.setItem(key, JSON.stringify(valueStorage));
+
+        // Despachar un CustomEvent después de modificar el sessionStorage
+        window.dispatchEvent(
+          new CustomEvent("sessionStorageChange", {
+            detail: { key, value: valueStorage },
+          })
+        );
       } catch (error) {
         console.error(`Error settings by ${key}: `, error);
       }
@@ -31,6 +38,13 @@ export const useSessionStorage = (key: string, initialValue: any) => {
     try {
       window.sessionStorage.removeItem(key);
       setStorage(initialValue);
+
+      // Despachar un CustomEvent después de eliminar el valor
+      window.dispatchEvent(
+        new CustomEvent("sessionStorageChange", {
+          detail: { key, value: initialValue }, // O null, dependiendo de tu lógica
+        })
+      );
     } catch (error) {
       console.log(`Error removing item from ${key}`, error);
     }
@@ -38,11 +52,14 @@ export const useSessionStorage = (key: string, initialValue: any) => {
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent | Event | any) => {
+      // Manejar el CustomEvent
       if (event instanceof CustomEvent && event.detail.key === key) {
         setStorage(event.detail.value);
       }
 
-      if (event.key === key) {
+      // Manejar el evento 'storage' estándar (para cambios desde otros tabs/ventanas)
+      if (event.key === key && !(event instanceof CustomEvent)) {
+        // Asegurarse de no procesar el mismo evento dos veces
         try {
           const newValue = event.newValue
             ? JSON.parse(event.newValue)
@@ -54,11 +71,13 @@ export const useSessionStorage = (key: string, initialValue: any) => {
       }
     };
     window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("sessionStorageChange", handleStorageChange); // Escuchar también el CustomEvent
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("sessionStorageChange", handleStorageChange); // Limpiar el listener del CustomEvent
     };
-  }, [initialValue, key, storage]);
+  }, [initialValue, key]);
 
   return { storage, setValue, removeValue };
 };

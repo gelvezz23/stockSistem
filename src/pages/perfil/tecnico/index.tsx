@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { useSessionStorage } from "../../utils/hook/useSessionStorage";
-import { FormsClient } from "../dashboard/usersList/form";
-import Modal from "../../components/Modal";
+import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
+import { FormsClient } from "../../dashboard/usersList/form";
+import Modal from "../../../components/Modal";
+import { NavLink, Outlet } from "react-router";
 
 export const Tecnico = () => {
   const { storage } = useSessionStorage("user", null);
@@ -100,13 +101,19 @@ export const Tecnico = () => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Perfil de Tecnico
         </h1>
-        <div className="flex p-4">
+        <div className="flex p-4 gap-2">
           <button
             onClick={handleEditClick}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Editar
           </button>
+          <NavLink
+            to="agenda"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Agenda
+          </NavLink>
         </div>
         <div className="bg-white shadow overflow-hidden rounded-md">
           <div className="px-4 py-5 sm:px-6">
@@ -153,6 +160,7 @@ export const Tecnico = () => {
             </dl>
           </div>
         </div>
+        <Outlet />
       </div>
     </div>
   );
