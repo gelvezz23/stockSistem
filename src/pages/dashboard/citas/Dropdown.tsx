@@ -11,7 +11,7 @@ interface EmailDropdownProps {
 const EmailDropdown: React.FC<EmailDropdownProps> = ({
   emails,
   onSelect,
-  selected,
+  // selected,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
