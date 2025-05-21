@@ -116,7 +116,6 @@ const FormServicioTecnico: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Aquí puedes enviar los datos del formulario a tu backend
-    console.log("Datos del formulario:", formData);
     // Después de enviar, podrías resetear el formulario:
     // setFormData({ ...initialFormData });
   };

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EmailDropdown from "./Dropdown";
+import { DateTimer } from "./dateTimer";
 
 const CrearCita = () => {
   const [users, setUsers] = useState<any>([]);
@@ -8,10 +9,17 @@ const CrearCita = () => {
   const [errorState, setError] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [showTime, setShowTime] = useState(false);
   const [selectedClient, setSelectedClient] = useState("Seleccionar Cliente");
-  const [selectedTechnician, setSelectedTechnician] = useState(
-    "Seleccionar Técnico"
-  );
+  const [selectedTechnician, setSelectedTechnician] = useState("");
+  const [citas, setCitas] = useState();
+
+  const fechaInicioFormateada = useCallback(() => {
+    return `${selectedDate} ${selectedTime}:00`;
+  }, [selectedDate, selectedTime]);
+  const fecha = fechaInicioFormateada();
+  console.log("YY", fecha);
+  console.log("citas", citas);
   const [direccion, setDireccion] = useState("");
   const [selectedService, setSelectedService] = useState(
     "Seleccione servicios"
@@ -59,6 +67,21 @@ const CrearCita = () => {
     getTechnicians();
   }, []);
 
+  const fetchCitas = async (valueId: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}/api/getDateTecnico/${valueId}`
+      );
+      if (!response.ok) {
+        console.log(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCitas(data);
+    } catch (e: any) {
+      setError("Error al cargar las citas: " + e.message);
+    }
+  };
+
   const handleClientSelect = (email: string) => {
     setSelectedClient(email);
     // Aquí podrías buscar el ID del cliente basado en el email seleccionado
@@ -66,14 +89,16 @@ const CrearCita = () => {
 
   const handleTechnicianSelect = (email: string) => {
     setSelectedTechnician(email);
+    fetchCitas(email);
     // Aquí podrías buscar el ID del técnico basado en el email seleccionado
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
+    if (!selectedClient || !selectedTechnician) {
+      alert("Seleccione un tecnico y un cliente");
+    }
     event.preventDefault();
-    // Aquí puedes enviar los datos del formulario
-    console.log();
-    const fechaInicioFormateada = `${selectedDate} ${selectedTime}:00`;
+
     const response: any = await fetch(
       `${import.meta.env.VITE_BACK_URL}/api/crearServicioTecnico`,
       {
@@ -88,7 +113,7 @@ const CrearCita = () => {
           solucion: null,
           estado: "agendado",
           garantia: null,
-          fecha_inicio: fechaInicioFormateada,
+          fecha_inicio: fecha,
           cliente_id: selectedClient,
           tecnico_id: selectedTechnician,
           diagnostico: selectedService,
@@ -100,13 +125,19 @@ const CrearCita = () => {
     if (!response.ok) setError("Un error inesperado" + response);
 
     const data = await response.json();
-    if (data) alert(data.message);
+    if (data) {
+      alert(data.message);
+      window.location.reload();
+    }
   };
 
   if (errorState) {
     return <p className="text-red-500">{errorState}</p>;
   }
 
+  const handleShowSelectTimer = () => {
+    setShowTime(!showTime);
+  };
   return (
     <form
       onSubmit={handleSubmit}
@@ -116,36 +147,6 @@ const CrearCita = () => {
         Crear Nueva Cita
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex flex-col">
-          <label
-            htmlFor="fechaCita"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Fecha de cita
-          </label>
-          <input
-            type="date"
-            id="fechaCita"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="horaCita"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Hora de cita
-          </label>
-          <input
-            type="time"
-            id="horaCita"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={selectedTime}
-            onChange={(e) => setSelectedTime(e.target.value)}
-          />
-        </div>
         <div>
           <label
             htmlFor="cliente"
@@ -171,6 +172,54 @@ const CrearCita = () => {
             onSelect={handleTechnicianSelect}
             selected={selectedTechnician}
           />
+        </div>
+
+        <div className="flex flex-col">
+          <label
+            htmlFor="fechaCita"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Fecha de cita
+          </label>
+          <input
+            disabled={!selectedTechnician}
+            type="date"
+            id="fechaCita"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label
+            htmlFor="horaCita"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Hora de cita
+          </label>
+          <button
+            className="flex w-full gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            type="button"
+            disabled={selectedTechnician === "" || selectedDate === ""}
+            onClick={handleShowSelectTimer}
+          >
+            Seleccionar{" "}
+            {selectedTime ? (
+              <span className=" text-gray-700">Hora: {selectedTime}</span>
+            ) : (
+              <span className=" text-gray-700">Hora: ...</span>
+            )}
+          </button>
+          {showTime && (
+            <DateTimer
+              citas={citas}
+              fechaInicioFormateada={fecha}
+              handleShowSelectTimer={handleShowSelectTimer}
+              selectedTime={selectedTime}
+              setSelectedTime={setSelectedTime}
+            />
+          )}
         </div>
         <div>
           <label

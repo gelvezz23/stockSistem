@@ -4,7 +4,6 @@ import Modal from "../Modal";
 import { ProductDetails } from "../productDetails";
 import "./styles.css";
 export const ProductCard = ({ product }: { product: any }) => {
-  console.log(product);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
 
   const isThisModalOpen = openModalId === product.producto_id;

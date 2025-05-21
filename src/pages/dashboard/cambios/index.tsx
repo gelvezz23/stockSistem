@@ -43,7 +43,6 @@ const ListaDeCambios: React.FC = () => {
           return;
         }
         const data: any[] = await response.json();
-        console.log("SSS", data);
         setCambios(data);
       } catch (err: any) {
         setError(err.message || "Error desconocido al obtener los cambios");

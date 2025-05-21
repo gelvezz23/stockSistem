@@ -32,7 +32,6 @@ const EmailDropdown: React.FC<EmailDropdownProps> = ({
     setIsOpen(false);
     setSearchTerm(""); // Limpiar el buscador después de seleccionar
     onSelect(usuario_id);
-    console.log("Documento seleccionado:", email);
     // Aquí puedes agregar la lógica para usar el documento seleccionado
   };
 
