@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+import Modal from "../../../components/Modal";
+import { FormularioEnvio } from "./formulario_envio";
 
 export const Ventas = () => {
+  const [open, setOpen] = useState(false);
   const [ventasAgrupadas, setVentasAgrupadas] = useState<any[]>([]);
   const [newQuantities, setNewQuantities] = useState<
     Record<number, number | null>
@@ -168,6 +171,11 @@ export const Ventas = () => {
     }
   };
 
+  const handleEnvio = async (detalles: any) => {
+    console.log(detalles[0].venta_id);
+    setOpen(!open);
+  };
+
   useEffect(() => {
     const getVentas = async () => {
       setLoading(true);
@@ -205,6 +213,9 @@ export const Ventas = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen py-8">
+      <Modal isOpen={open} onClose={() => setOpen(!open)}>
+        <FormularioEnvio />
+      </Modal>
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
           Lista de Ventas
@@ -381,6 +392,13 @@ export const Ventas = () => {
                           </li>
                         ))}
                       </ul>
+                      <button
+                        className="my-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        onClick={() => handleEnvio(venta.detalles)}
+                      >
+                        Enviar
+                      </button>
                       {!isChanging ? (
                         <button
                           className="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

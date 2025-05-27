@@ -6,11 +6,7 @@
 }
 html {
   color: white;
-  background-image: linear-gradient(
-    to bottom left,
-    rgb(24, 23, 23),
-    rgba(0, 255, 0, 0.453)
-  ); /* Degradado semitransparente */
+  /* Degradado semitransparente */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }

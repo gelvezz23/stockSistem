@@ -67,6 +67,17 @@ const CrearCita = () => {
     getTechnicians();
   }, []);
 
+  const [minDate, setMinDate] = useState("");
+
+  useEffect(() => {
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Meses son 0-indexados
+    const day = String(today.getDate()).padStart(2, "0");
+    setMinDate(`${year}-${month}-${day}`);
+  }, []);
+
   const fetchCitas = async (valueId: string) => {
     try {
       const response = await fetch(
@@ -138,6 +149,7 @@ const CrearCita = () => {
   const handleShowSelectTimer = () => {
     setShowTime(!showTime);
   };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -188,6 +200,7 @@ const CrearCita = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
+            min={minDate}
           />
         </div>
 

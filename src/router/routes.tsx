@@ -20,6 +20,7 @@ import CrearCita from "../pages/dashboard/citas/crear";
 import ListarCitas from "../pages/dashboard/citas/ListarCitas";
 import ListarCitasPerfil from "../pages/perfil/tecnico/agenda";
 import { Tecnico } from "../pages/perfil/tecnico";
+import Entregas from "../pages/dashboard/entregas";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -119,6 +120,7 @@ export const routes = createBrowserRouter([
               { path: "alerts", element: <LowStockProductsList /> },
               { path: "shoppingCart", element: <ShoppingCartPage /> },
               { path: "ventas", element: <Ventas /> },
+              { path: "entregas", element: <Entregas /> },
               { path: "cambios", element: <ListaDeCambios /> },
               { path: "citas/agendar", element: <CrearCita /> },
               { path: "citas/list", element: <ListarCitas /> },

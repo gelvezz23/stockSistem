@@ -21,7 +21,7 @@ export const DateTimer = ({
     const endHour = 18; // 6 PM (18:00 in 24-hour format)
 
     for (let h = startHour; h <= endHour; h++) {
-      for (let m = 0; m < 60; m += 30) {
+      for (let m = 0; m < 60; m += 60) {
         // Skip times after 18:00 (e.g., 18:30 should not be included)
         if (h === endHour && m > 0) {
           continue;
@@ -92,27 +92,33 @@ export const DateTimer = ({
     <>
       <div className="pt-5 border-t flex sm:flex-row flex-col sm:space-x-5 rtl:space-x-reverse">
         <ul id="timetable" className="grid w-full grid-cols-2 gap-2 mt-5">
-          {timeSlots.map((slot) => (
-            <li key={slot.id}>
-              {" "}
-              {/* Use key for React list rendering */}
-              <input
-                type="radio"
-                id={slot.id}
-                value={slot.value} // The actual time string like "08:00"
-                className="hidden peer"
-                name="timetable" // All radio buttons in this group should have the same name
-                checked={selectedTime === slot.value} // Check if this time is selected
-                onChange={handleTimeChange} // Handle selection change
-              />
-              <label
-                htmlFor={slot.id}
-                className="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600 hover:text-white peer-checked:text-white dark:peer-checked:text-white hover:bg-blue-500"
-              >
-                {slot.display} {/* The human-readable time like "08:00 AM" */}
-              </label>
-            </li>
-          ))}
+          {timeSlots.map((slot: any) => {
+            if (slot.id !== "12-00") {
+              return (
+                <li key={slot.id}>
+                  {" "}
+                  {/* Use key for React list rendering */}
+                  <input
+                    type="radio"
+                    id={slot.id}
+                    value={slot.value} // The actual time string like "08:00"
+                    className="hidden peer"
+                    name="timetable" // All radio buttons in this group should have the same name
+                    checked={selectedTime === slot.value} // Check if this time is selected
+                    onChange={handleTimeChange} // Handle selection change
+                  />
+                  <label
+                    htmlFor={slot.id}
+                    className="inline-flex items-center justify-center w-full p-2 text-sm font-medium text-center bg-white border rounded-lg cursor-pointer text-blue-600 border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-600 hover:text-white peer-checked:text-white dark:peer-checked:text-white hover:bg-blue-500"
+                  >
+                    {slot.display}{" "}
+                    {/* The human-readable time like "08:00 AM" */}
+                  </label>
+                </li>
+              );
+            }
+            return <></>;
+          })}
         </ul>
       </div>
       {/* Optional: Display the selected time for debugging or confirmation */}

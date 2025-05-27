@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect } from "react";
+import { NavLink } from "react-router";
 
 interface EmailDropdownProps {
   emails: any[];
@@ -95,6 +96,16 @@ const EmailDropdown: React.FC<EmailDropdownProps> = ({
               onChange={handleSearch}
             />
             <ul className="max-h-40 overflow-y-auto">
+              {filteredEmails.length === 0 && (
+                <li>
+                  <NavLink
+                    to="/dashboard/users/create"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    Crear Usuario
+                  </NavLink>
+                </li>
+              )}
               {filteredEmails.map((item: any, index: any) => (
                 <li key={index}>
                   <button
