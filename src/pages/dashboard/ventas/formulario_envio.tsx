@@ -103,7 +103,7 @@ export const FormularioEnvio = ({
         setLoading(false);
         return;
       }
-      const data = await response.json();
+      //const data = await response.json();
       onClose();
       setLoading(false);
     } catch (err: any) {
