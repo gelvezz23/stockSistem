@@ -13,13 +13,12 @@ const CrearCita = () => {
   const [selectedClient, setSelectedClient] = useState("Seleccionar Cliente");
   const [selectedTechnician, setSelectedTechnician] = useState("");
   const [citas, setCitas] = useState();
-
+  const [direccionActual, setDireccionActual] = useState("");
   const fechaInicioFormateada = useCallback(() => {
     return `${selectedDate} ${selectedTime}:00`;
   }, [selectedDate, selectedTime]);
   const fecha = fechaInicioFormateada();
-  console.log("YY", fecha);
-  console.log("citas", citas);
+
   const [direccion, setDireccion] = useState("");
   const [selectedService, setSelectedService] = useState(
     "Seleccione servicios"
@@ -95,6 +94,10 @@ const CrearCita = () => {
 
   const handleClientSelect = (email: string) => {
     setSelectedClient(email);
+    const clienteDireccion = users.filter((item: any) => {
+      return item.usuario_id === email;
+    });
+    setDireccionActual(clienteDireccion[0].direccion);
     // Aquí podrías buscar el ID del cliente basado en el email seleccionado
   };
 
@@ -129,7 +132,7 @@ const CrearCita = () => {
           tecnico_id: selectedTechnician,
           diagnostico: selectedService,
           descripcion_problema: problemDescription,
-          direccion_servicio: direccion,
+          direccion_servicio: direccion || direccionActual,
         }),
       }
     );
@@ -284,7 +287,7 @@ const CrearCita = () => {
             htmlFor="descripcion"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Direccion de la cita.
+            Direccion de la cita. (opcional)
           </label>
           <textarea
             id="direccion"
@@ -293,6 +296,7 @@ const CrearCita = () => {
             value={direccion}
             onChange={(e) => setDireccion(e.target.value)}
           ></textarea>
+          <p className="text-gray-700">Direccion Actual: {direccionActual}</p>
         </div>
       </div>
       {errorState && <p className="text-red-500">{errorState}</p>}

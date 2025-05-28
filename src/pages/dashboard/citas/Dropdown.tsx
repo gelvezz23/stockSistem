@@ -110,7 +110,7 @@ const EmailDropdown: React.FC<EmailDropdownProps> = ({
                 <li key={index}>
                   <button
                     onClick={() =>
-                      handleSelect(item.documento, item.usuario_id)
+                      handleSelect(item.nombre_cliente, item.usuario_id)
                     }
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                   >

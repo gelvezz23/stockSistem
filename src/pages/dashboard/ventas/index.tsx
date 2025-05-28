@@ -24,7 +24,7 @@ export const Ventas = () => {
   >({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [detalleVentaEnviado, setdetalleVentaEnviado] = useState();
   const handleVentaClick = (ventaId: number) => {
     setSelectedVentaId(ventaId === selectedVentaId ? null : ventaId);
     setIsChanging(false); // Reset cambio state when a new venta is selected/unselected
@@ -172,7 +172,7 @@ export const Ventas = () => {
   };
 
   const handleEnvio = async (detalles: any) => {
-    console.log(detalles[0].venta_id);
+    setdetalleVentaEnviado(detalles);
     setOpen(!open);
   };
 
@@ -214,7 +214,10 @@ export const Ventas = () => {
   return (
     <div className="bg-gray-100 min-h-screen py-8">
       <Modal isOpen={open} onClose={() => setOpen(!open)}>
-        <FormularioEnvio />
+        <FormularioEnvio
+          venta={detalleVentaEnviado}
+          onClose={() => setOpen(!open)}
+        />
       </Modal>
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
@@ -395,7 +398,7 @@ export const Ventas = () => {
                       <button
                         className="my-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="button"
-                        onClick={() => handleEnvio(venta.detalles)}
+                        onClick={() => handleEnvio(venta)}
                       >
                         Enviar
                       </button>
