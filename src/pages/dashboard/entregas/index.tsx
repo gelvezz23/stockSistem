@@ -170,27 +170,36 @@ const EntregaList = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {entregas.map((entrega: any) => (
-                <tr key={entrega.id_entrega} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {entrega.venta_id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {entrega.nombre_cliente}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {entrega.documento}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {new Date(entrega.fecha_envio).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {entrega.direccion_entrega}
-                  </td>
+              {entregas.map((entrega: any) => {
+                const date = new Date(entrega.fecha_venta);
 
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth() es 0-indexado, por eso +1
+                const day = date.getDate().toString().padStart(2, "0");
+
+                // Concatenamos para formar el string deseado
+                const formattedDate = `${year}${month}${day}`;
+                return (
+                  <tr key={entrega.id_entrega} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {`${formattedDate}_${entrega.venta_id}`}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {entrega.nombre_cliente}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {entrega.documento}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {new Date(entrega.fecha_envio).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {entrega.direccion_entrega}
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                       ${
                         entrega.estado === "entregado"
                           ? "bg-green-100 text-green-800"
@@ -200,24 +209,25 @@ const EntregaList = () => {
                           ? "bg-yellow-100 text-yellow-800"
                           : "bg-red-100 text-red-800"
                       }`}
-                    >
-                      {entrega.estado.replace(/_/g, " ")}
-                    </span>
-                  </td>
+                      >
+                        {entrega.estado.replace(/_/g, " ")}
+                      </span>
+                    </td>
 
-                  <td className="px-6 py-4 text-sm text-gray-700 max-w-xs overflow-hidden text-ellipsis">
-                    {entrega.observacion || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => openEditModal(entrega)}
-                      className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md transition duration-150 ease-in-out"
-                    >
-                      Editar Estado
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-6 py-4 text-sm text-gray-700 max-w-xs overflow-hidden text-ellipsis">
+                      {entrega.observacion || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => openEditModal(entrega)}
+                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md transition duration-150 ease-in-out"
+                      >
+                        Editar Estado
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 

@@ -125,7 +125,7 @@ export const ProductList = () => {
               <th className="py-2 px-6 text-left font-semibold text-gray-700">
                 Codigo
               </th>
-              <th className="py-2 px-6 text-left font-semibold text-gray-700">
+              <th className="py-2 px-6 text-left font-semibold text-gray-700 hidden">
                 Sku
               </th>
               <th className="py-2 px-6 text-left font-semibold text-gray-700">
@@ -159,7 +159,7 @@ export const ProductList = () => {
                   <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
                     {product.codigo}
                   </td>
-                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700">
+                  <td className="py-2 px-6 text-left whitespace-nowrap text-gray-700 hidden">
                     {product.sku}
                   </td>
                   <td className="py-2 px-6 text-left">

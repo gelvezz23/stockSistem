@@ -226,220 +226,237 @@ export const Ventas = () => {
         {loading && <p>cargando...</p>}
         {error && <p className="error-message">{error}</p>}
         <ul className="space-y-4">
-          {ventasAgrupadas.map((venta) => (
-            <li
-              key={venta.venta_id}
-              className="bg-white shadow rounded-md overflow-hidden"
-            >
-              <div
-                className="p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200"
-                onClick={() => handleVentaClick(venta.venta_id)}
+          {ventasAgrupadas.map((venta) => {
+            const date = new Date(venta.detalles[0].fecha_venta);
+
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth() es 0-indexado, por eso +1
+            const day = date.getDate().toString().padStart(2, "0");
+
+            // Concatenamos para formar el string deseado
+            const formattedDate = `${year}${month}${day}`;
+            return (
+              <li
+                key={venta.venta_id}
+                className="bg-white shadow rounded-md overflow-hidden"
               >
-                <h2 className="text-sm font-semibold text-gray-700">
-                  Venta ID: {venta.venta_id} - {venta.detalles[0].email}
-                </h2>
-              </div>
-              {selectedVentaId === venta.venta_id && (
-                <div className="p-4 bg-gray-50 border-t border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-600 mb-2">
-                    Detalles de la Venta
-                  </h3>
-                  {venta.detalles.length > 0 ? (
-                    <>
-                      <ul className="space-y-2">
-                        {venta.detalles.map((detalle: any, index: any) => (
-                          <li
-                            key={index}
-                            className="text-gray-500 flex flex-col mb-2 border-b border-gray-300 pb-2"
-                          >
-                            <span className="font-semibold">
-                              Detalle ID: {detalle.detalle_id}
-                            </span>
-                            <span className="font-semibold">
-                              Producto Original: {detalle.nombre_producto} (ID:{" "}
-                              {detalle.producto_id}) - $
-                              {parseInt(detalle.precio_unitario).toLocaleString(
-                                "es-CO"
-                              )}
-                            </span>
-                            {isChanging &&
-                              productsToChange.some(
-                                (p) => p.detalle_id === detalle.detalle_id
-                              ) && (
-                                <div className="mt-2">
-                                  <label
-                                    htmlFor={`change-product-${detalle.detalle_id}`}
-                                    className="block text-gray-700 text-sm font-bold mb-1"
-                                  >
-                                    Cambiar por:
-                                  </label>
-                                  <select
-                                    id={`change-product-${detalle.detalle_id}`}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={
-                                      selectedChangeProducts[
-                                        detalle.detalle_id
-                                      ] || ""
-                                    }
-                                    onChange={(e) =>
-                                      handleProductChangeSelect(
-                                        detalle.detalle_id,
-                                        e.target.value
-                                      )
-                                    }
-                                  >
-                                    <option value="">
-                                      Seleccionar producto
-                                    </option>
-                                    {availableProducts
-                                      .filter(
-                                        (product) =>
-                                          Number(product.producto_id) !==
-                                          Number(detalle.producto_id)
-                                      )
-                                      .map((product: any) => (
-                                        <option
-                                          key={product.producto_id}
-                                          value={product.producto_id}
-                                        >
-                                          {product.nombre_producto} - $
-                                          {parseInt(
-                                            product.precio_venta
-                                          ).toLocaleString("es-CO")}
-                                        </option>
-                                      ))}
-                                  </select>
-                                </div>
-                              )}
-                            <span className="font-semibold">
-                              Cantidad: {detalle.cantidad}
+                <div
+                  className="p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => handleVentaClick(venta.venta_id)}
+                >
+                  <h2 className="text-sm font-semibold text-gray-700">
+                    Venta ID: {`${formattedDate}_${venta.venta_id}`} -{" "}
+                    {venta.detalles[0].email}
+                  </h2>
+                </div>
+                {selectedVentaId === venta.venta_id && (
+                  <div className="p-4 bg-gray-50 border-t border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                      Detalles de la Venta
+                    </h3>
+                    {venta.detalles.length > 0 ? (
+                      <>
+                        <ul className="space-y-2">
+                          {venta.detalles.map((detalle: any, index: any) => (
+                            <li
+                              key={index}
+                              className="text-gray-500 flex flex-col mb-2 border-b border-gray-300 pb-2"
+                            >
+                              <span className="font-semibold">
+                                Detalle ID: {detalle.detalle_id}
+                              </span>
+                              <span className="font-semibold">
+                                Producto Original: {detalle.nombre_producto}{" "}
+                                (ID: {detalle.producto_id}) - $
+                                {parseInt(
+                                  detalle.precio_unitario
+                                ).toLocaleString("es-CO")}
+                              </span>
                               {isChanging &&
                                 productsToChange.some(
                                   (p) => p.detalle_id === detalle.detalle_id
                                 ) && (
-                                  <input
-                                    name="newQuantity"
-                                    value={
-                                      newQuantities[detalle.detalle_id] || ""
-                                    }
-                                    onChange={(e) =>
-                                      handleNewQuantityChange(
-                                        detalle.detalle_id,
-                                        e.target.value
-                                      )
-                                    }
-                                    type="number"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                  />
-                                )}
-                            </span>
-                            {isChanging &&
-                              productsToChange.some(
-                                (p) => p.detalle_id === detalle.detalle_id
-                              ) && (
-                                <>
                                   <div className="mt-2">
                                     <label
-                                      htmlFor={`change-reason-${detalle.detalle_id}`}
+                                      htmlFor={`change-product-${detalle.detalle_id}`}
                                       className="block text-gray-700 text-sm font-bold mb-1"
                                     >
-                                      Motivo del Cambio:
+                                      Cambiar por:
                                     </label>
-                                    <input
-                                      type="text"
-                                      id={`change-reason-${detalle.detalle_id}`}
+                                    <select
+                                      id={`change-product-${detalle.detalle_id}`}
                                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                       value={
-                                        changeReasons[detalle.detalle_id] || ""
-                                      }
-                                      onChange={(e) =>
-                                        handleReasonChange(
-                                          detalle.detalle_id,
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                  </div>
-                                  <div className="mt-2">
-                                    <label
-                                      htmlFor={`change-observations-${detalle.detalle_id}`}
-                                      className="block text-gray-700 text-sm font-bold mb-1"
-                                    >
-                                      Observaciones:
-                                    </label>
-                                    <textarea
-                                      id={`change-observations-${detalle.detalle_id}`}
-                                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                      value={
-                                        changeObservations[
+                                        selectedChangeProducts[
                                           detalle.detalle_id
                                         ] || ""
                                       }
                                       onChange={(e) =>
-                                        handleObservationsChange(
+                                        handleProductChangeSelect(
                                           detalle.detalle_id,
                                           e.target.value
                                         )
                                       }
-                                      rows={3}
-                                    />
+                                    >
+                                      <option value="">
+                                        Seleccionar producto
+                                      </option>
+                                      {availableProducts
+                                        .filter(
+                                          (product) =>
+                                            Number(product.producto_id) !==
+                                            Number(detalle.producto_id)
+                                        )
+                                        .map((product: any) => (
+                                          <option
+                                            key={product.producto_id}
+                                            value={product.producto_id}
+                                          >
+                                            {product.nombre_producto} - $
+                                            {parseInt(
+                                              product.precio_venta
+                                            ).toLocaleString("es-CO")}
+                                          </option>
+                                        ))}
+                                    </select>
                                   </div>
-                                </>
-                              )}
-                            <span className="font-semibold">
-                              Subtotal: $
-                              {parseInt(detalle.subtotal).toLocaleString(
-                                "es-CO"
-                              )}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        className="my-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button"
-                        onClick={() => handleEnvio(venta)}
-                      >
-                        Enviar
-                      </button>
-                      {!isChanging ? (
+                                )}
+                              <span className="font-semibold">
+                                Cantidad: {detalle.cantidad}
+                                {isChanging &&
+                                  productsToChange.some(
+                                    (p) => p.detalle_id === detalle.detalle_id
+                                  ) && (
+                                    <input
+                                      name="newQuantity"
+                                      value={
+                                        newQuantities[detalle.detalle_id] || ""
+                                      }
+                                      onChange={(e) =>
+                                        handleNewQuantityChange(
+                                          detalle.detalle_id,
+                                          e.target.value
+                                        )
+                                      }
+                                      type="number"
+                                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    />
+                                  )}
+                              </span>
+                              {isChanging &&
+                                productsToChange.some(
+                                  (p) => p.detalle_id === detalle.detalle_id
+                                ) && (
+                                  <>
+                                    <div className="mt-2">
+                                      <label
+                                        htmlFor={`change-reason-${detalle.detalle_id}`}
+                                        className="block text-gray-700 text-sm font-bold mb-1"
+                                      >
+                                        Motivo del Cambio:
+                                      </label>
+                                      <input
+                                        type="text"
+                                        id={`change-reason-${detalle.detalle_id}`}
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value={
+                                          changeReasons[detalle.detalle_id] ||
+                                          ""
+                                        }
+                                        onChange={(e) =>
+                                          handleReasonChange(
+                                            detalle.detalle_id,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                    <div className="mt-2">
+                                      <label
+                                        htmlFor={`change-observations-${detalle.detalle_id}`}
+                                        className="block text-gray-700 text-sm font-bold mb-1"
+                                      >
+                                        Observaciones:
+                                      </label>
+                                      <textarea
+                                        id={`change-observations-${detalle.detalle_id}`}
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                        value={
+                                          changeObservations[
+                                            detalle.detalle_id
+                                          ] || ""
+                                        }
+                                        onChange={(e) =>
+                                          handleObservationsChange(
+                                            detalle.detalle_id,
+                                            e.target.value
+                                          )
+                                        }
+                                        rows={3}
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              <span className="font-semibold">
+                                Subtotal: $
+                                {parseInt(detalle.subtotal).toLocaleString(
+                                  "es-CO"
+                                )}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
                         <button
-                          className="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                          className="my-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                           type="button"
-                          onClick={() => handleHacerCambioClick(venta.detalles)}
+                          onClick={() => handleEnvio(venta)}
                         >
-                          Hacer cambio
+                          Enviar
                         </button>
-                      ) : (
-                        <div className="flex space-x-2 my-2">
+                        {!isChanging ? (
                           <button
-                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="button"
                             onClick={() =>
-                              handleSaveChanges(venta.venta_id, venta.detalles)
+                              handleHacerCambioClick(venta.detalles)
                             }
                           >
-                            Guardar Cambios
+                            Hacer cambio
                           </button>
-                          <button
-                            className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            type="button"
-                            onClick={() => setIsChanging(false)}
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <p className="text-gray-500">
-                      No hay detalles para esta venta.
-                    </p>
-                  )}
-                </div>
-              )}
-            </li>
-          ))}
+                        ) : (
+                          <div className="flex space-x-2 my-2">
+                            <button
+                              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                              type="button"
+                              onClick={() =>
+                                handleSaveChanges(
+                                  venta.venta_id,
+                                  venta.detalles
+                                )
+                              }
+                            >
+                              Guardar Cambios
+                            </button>
+                            <button
+                              className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                              type="button"
+                              onClick={() => setIsChanging(false)}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-gray-500">
+                        No hay detalles para esta venta.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

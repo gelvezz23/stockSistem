@@ -453,7 +453,7 @@ const Create = ({ productData }: { productData: any }) => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group hidden">
           <label htmlFor="sku">Sku:</label>
           <input
             type="text"

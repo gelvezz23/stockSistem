@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
-export const FormsProveedor = ({ proveedor_id }: { proveedor_id?: any }) => {
+export const FormsProveedor = ({
+  proveedor_id,
+  editar = false,
+}: {
+  proveedor_id?: any;
+  editar?: boolean;
+}) => {
   const [clientsState, setClientState] = useState<any>({
     nombre_proveedor: "",
     nit: "",
@@ -10,6 +16,7 @@ export const FormsProveedor = ({ proveedor_id }: { proveedor_id?: any }) => {
     email: "",
     proveedor_id,
   });
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -103,6 +110,7 @@ export const FormsProveedor = ({ proveedor_id }: { proveedor_id?: any }) => {
             name="nombre_proveedor"
             value={clientsState.nombre_proveedor}
             onChange={handleClientsState}
+            disabled={editar}
             required
           />
           <div className="error-message" id="nombre_proveedorError"></div>
@@ -116,6 +124,7 @@ export const FormsProveedor = ({ proveedor_id }: { proveedor_id?: any }) => {
             name="nit"
             value={clientsState.nit}
             onChange={handleClientsState}
+            disabled={editar}
             required
           />
           <div className="error-message" id="documentoError"></div>

@@ -62,7 +62,7 @@ export const UsersList = () => {
           <table className="min-w-full bg-white shadow-md rounded-md">
             <thead className="bg-gray-50">
               <tr>
-                <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                <th className="py-3 px-6 text-left font-semibold text-gray-700 hidden">
                   ID
                 </th>
                 <th className="py-3 px-6 text-left font-semibold text-gray-700">
@@ -89,15 +89,15 @@ export const UsersList = () => {
                   >
                     {user.rol_id === 4 && (
                       <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                        <FormsClient user={user} />
+                        <FormsClient editar={true} user={user} />
                       </Modal>
                     )}
                     {(user.rol_id === 3 || user.rol_id === 2) && (
                       <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                        <FormsClient user={user} />
+                        <FormsClient editar={true} user={user} />
                       </Modal>
                     )}
-                    <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900">
+                    <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900 hidden">
                       {user.usuario_id}
                     </td>
                     <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900">

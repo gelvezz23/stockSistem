@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import "./styles.css";
-export const FormsClient = ({ user }: { user: any }) => {
+export const FormsClient = ({
+  user,
+  editar = false,
+}: {
+  user: any;
+  editar?: boolean;
+}) => {
   const [clientsState, setClientState] = useState<any>({
     nombre_cliente: "",
     documento: "",
@@ -105,6 +111,7 @@ export const FormsClient = ({ user }: { user: any }) => {
         <div>
           <label htmlFor="nombre_cliente">Nombre del Cliente:</label>
           <input
+            disabled={editar}
             type="text"
             id="nombre_cliente"
             name="nombre_cliente"
@@ -118,6 +125,7 @@ export const FormsClient = ({ user }: { user: any }) => {
         <div>
           <label htmlFor="documento">Documento:</label>
           <input
+            disabled={editar}
             type="text"
             id="documento"
             name="documento"

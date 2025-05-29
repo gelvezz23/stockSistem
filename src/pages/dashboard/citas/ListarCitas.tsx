@@ -99,44 +99,46 @@ const ListarCitas = () => {
               </tr>
             </thead>
             <tbody>
-              {citas.map((cita: any) => (
-                <tr key={cita.servicio_id}>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.servicio_id}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {formatDate(cita.fecha_inicio)}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.fecha_fin ? formatDate(cita.fecha_fin) : "-"}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita?.cliente_documento} - {cita.cliente_email}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.tecnico_documento} - {cita.tecnico_email}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.diagnostico || "-"}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.estado || "-"}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.direccion_servicio}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.garantia ? "Sí" : "No"}
-                  </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.descripcion_problema}
-                  </td>
+              {citas.map((cita: any) => {
+                return (
+                  <tr key={cita.servicio_id}>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {`${cita.servicio_id}`}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {formatDate(cita.fecha_inicio)}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.fecha_fin ? formatDate(cita.fecha_fin) : "-"}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita?.cliente_documento} - {cita.cliente_email}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.tecnico_documento} - {cita.tecnico_email}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.diagnostico || "-"}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.estado || "-"}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.direccion_servicio}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.garantia ? "Sí" : "No"}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.descripcion_problema}
+                    </td>
 
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.solucion || "-"}
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.solucion || "-"}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

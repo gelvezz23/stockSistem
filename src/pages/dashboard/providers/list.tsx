@@ -84,7 +84,10 @@ const ProveedorList = () => {
                   className="border-b border-gray-200"
                 >
                   <Modal isOpen={isThisModalOpen} onClose={closeModal}>
-                    <FormsProveedor proveedor_id={user.proveedor_id} />
+                    <FormsProveedor
+                      editar={true}
+                      proveedor_id={user.proveedor_id}
+                    />
                   </Modal>
                   <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
                     {user.proveedor_id}
