@@ -45,6 +45,7 @@ export const FormsProveedor = ({ proveedor_id }: { proveedor_id?: any }) => {
       }
 
       setLoading(false);
+      window.location.reload();
     } catch (err: any) {
       setLoading(false);
       setError(err.message || "Error desconocido al crear cliente");

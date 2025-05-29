@@ -92,9 +92,7 @@ const ListarCitas = () => {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Descripción
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Diagnóstico
-                </th>
+
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Solución
                 </th>
@@ -119,7 +117,7 @@ const ListarCitas = () => {
                     {cita.tecnico_documento} - {cita.tecnico_email}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.servicio || "-"}
+                    {cita.diagnostico || "-"}
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     {cita.estado || "-"}
@@ -133,9 +131,7 @@ const ListarCitas = () => {
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     {cita.descripcion_problema}
                   </td>
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                    {cita.diagnostico || "-"}
-                  </td>
+
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     {cita.solucion || "-"}
                   </td>
