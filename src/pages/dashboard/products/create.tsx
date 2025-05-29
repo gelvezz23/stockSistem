@@ -44,6 +44,7 @@ const Create = ({ productData }: { productData: any }) => {
 
   const handleChange = (event: { target: { name: any; value: any } }) => {
     const { name, value } = event.target;
+    console.log(event.target);
     setProductos({ ...productos, [name]: value, sku: productSkuData });
 
     setProductoSku(productSkuData);
@@ -138,7 +139,7 @@ const Create = ({ productData }: { productData: any }) => {
           },
         }
       );
-      if (productExist.ok) {
+      if (productExist?.ok) {
         const data = await productExist.json();
         if (data) {
           const response = await fetch(
@@ -406,11 +407,19 @@ const Create = ({ productData }: { productData: any }) => {
               required
             >
               <option value="">Seleccione un proveedor</option>
-              {proveedores.map((proveedor: { usuario_id: any; email: any }) => (
-                <option key={proveedor.usuario_id} value={proveedor.usuario_id}>
-                  {proveedor.email}
-                </option>
-              ))}
+              {proveedores.map(
+                (proveedor: { proveedor_id: any; email: any }) => {
+                  console.log(proveedor);
+                  return (
+                    <option
+                      key={proveedor.proveedor_id}
+                      value={proveedor.proveedor_id}
+                    >
+                      {proveedor.email}
+                    </option>
+                  );
+                }
+              )}
             </select>
           )}
         </div>
