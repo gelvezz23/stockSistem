@@ -57,11 +57,16 @@ export const routes = createBrowserRouter([
             element: <Login />,
           },
           { path: "Registro", element: <Register /> },
+          { path: "Recuperar-cuenta", element: <ForgotPasswordForm /> },
         ],
       },
       {
         element: <PrivateRoute />,
         children: [
+          {
+            path: "perfil/auxiliar",
+            element: <Shop />,
+          },
           {
             path: "perfil/cliente",
             element: <Cliente />,

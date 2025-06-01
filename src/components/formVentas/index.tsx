@@ -14,23 +14,24 @@ export const FormVentas: FC<{
   const [selectedAuxiliary, setSelectedAuxiliary] = useState<
     number | string | ""
   >(0);
-
   const [selectedClient, setSelectedClient] = useState<number | string | "">(
     ""
   );
   const { storage } = useSessionStorage("user", null);
+
   const [viewForm, setViewForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const dataAux = auxiliaries.filter(
     (item: any) => item?.usuario_id === storage?.user?.usuario_id
   );
-
+  console.log("dataAux", dataAux);
+  console.log("storage?.user", storage?.user);
   const dataClient = clients.filter(
     (item: { usuario_id: string | number }) =>
       item?.usuario_id === selectedClient
   );
-  console.log("HHH", dataClient);
+
   const handleAuxiliaryChange = () => {
     setSelectedAuxiliary(dataAux[0]?.usuario_id || 1);
   };

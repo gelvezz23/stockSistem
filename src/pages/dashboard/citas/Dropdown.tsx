@@ -6,12 +6,14 @@ import { NavLink } from "react-router";
 interface EmailDropdownProps {
   emails: any[];
   onSelect: (email: string) => void;
+  onSelectEmail?: (value: any) => void;
   selected: string;
 }
 
 const EmailDropdown: React.FC<EmailDropdownProps> = ({
   emails,
   onSelect,
+  onSelectEmail,
   // selected,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,11 +30,13 @@ const EmailDropdown: React.FC<EmailDropdownProps> = ({
     setSearchTerm(event.target.value.toLowerCase());
   };
 
-  const handleSelect = (email: string, usuario_id: any) => {
-    setSelectedEmail(email);
+  const handleSelect = (name: string, usuario_id: any, email: any) => {
+    setSelectedEmail(name);
+
     setIsOpen(false);
     setSearchTerm(""); // Limpiar el buscador después de seleccionar
     onSelect(usuario_id);
+    if (onSelectEmail) onSelectEmail(email);
     // Aquí puedes agregar la lógica para usar el documento seleccionado
   };
 
@@ -110,7 +114,11 @@ const EmailDropdown: React.FC<EmailDropdownProps> = ({
                 <li key={index}>
                   <button
                     onClick={() =>
-                      handleSelect(item.nombre_cliente, item.usuario_id)
+                      handleSelect(
+                        item.nombre_cliente,
+                        item.usuario_id,
+                        item.email
+                      )
                     }
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                   >

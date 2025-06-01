@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import EmailDropdown from "./Dropdown";
 import { DateTimer } from "./dateTimer";
+import useEmailSender from "../../../utils/hook/useEmail";
 
 const CrearCita = () => {
   const [users, setUsers] = useState<any>([]);
@@ -13,7 +14,10 @@ const CrearCita = () => {
   const [selectedClient, setSelectedClient] = useState("Seleccionar Cliente");
   const [selectedTechnician, setSelectedTechnician] = useState("");
   const [citas, setCitas] = useState();
+  const [emailonSelectEmail, setonSelectEmail] = useState("");
   const [direccionActual, setDireccionActual] = useState("");
+  const { sendEmail } = useEmailSender();
+
   const fechaInicioFormateada = useCallback(() => {
     return `${selectedDate} ${selectedTime}:00`;
   }, [selectedDate, selectedTime]);
@@ -107,10 +111,11 @@ const CrearCita = () => {
     // Aquí podrías buscar el ID del técnico basado en el email seleccionado
   };
 
+  const onSelectEmail = (email: any) => {
+    setonSelectEmail(email);
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
-    if (!selectedClient || !selectedTechnician) {
-      alert("Seleccione un tecnico y un cliente");
-    }
     event.preventDefault();
 
     const response: any = await fetch(
@@ -140,7 +145,13 @@ const CrearCita = () => {
 
     const data = await response.json();
     if (data) {
+      await sendEmail(emailonSelectEmail, {
+        estado: "agendado",
+        fecha,
+      });
+
       alert(data.message);
+
       window.location.reload();
     }
   };
@@ -170,6 +181,7 @@ const CrearCita = () => {
             Documento del cliente
           </label>
           <EmailDropdown
+            onSelectEmail={onSelectEmail}
             emails={users}
             onSelect={handleClientSelect}
             selected={selectedClient}

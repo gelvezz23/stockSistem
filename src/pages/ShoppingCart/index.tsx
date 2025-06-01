@@ -37,7 +37,7 @@ const ShoppingCartPage: React.FC = () => {
       const data = await response.json();
 
       const filterAuxiliar = data.filter(
-        (item: { rol_id: number }) => item.rol_id === 2
+        (item: { rol_id: any }) => item.rol_id == 2
       );
 
       setAuxiliar(filterAuxiliar);

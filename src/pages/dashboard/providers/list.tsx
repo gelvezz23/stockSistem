@@ -60,7 +60,7 @@ const ProveedorList = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="py-3 px-6 text-left font-semibold text-gray-700">
-                ID
+                Nit
               </th>
               <th className="py-3 px-6 text-left font-semibold text-gray-700">
                 Email
@@ -90,7 +90,7 @@ const ProveedorList = () => {
                     />
                   </Modal>
                   <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
-                    {user.proveedor_id}
+                    {user.nit}
                   </td>
                   <td className="py-3 px-6 text-left whitespace-nowrap text-gray-900">
                     {user.email}

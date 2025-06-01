@@ -29,16 +29,25 @@ const Login = () => {
       const thereIsAdmin = dataUser?.rol_id === 1;
       const thereIsClient = dataUser?.rol_id === 4;
       const thereIsTecnico = dataUser?.rol_id === 3;
+      const thereIsAuxiliar = dataUser?.rol_id === 2;
       setValue({ user: dataUser, thereIsAdmin });
+
       if (thereIsAdmin) {
         navigate("/dashboard", { replace: true });
       }
+
       if (thereIsClient) {
         navigate("/perfil/cliente", { replace: true });
       }
+
       if (thereIsTecnico) {
         navigate("/perfil/tecnico", { replace: true });
       }
+
+      if (thereIsAuxiliar) {
+        navigate("/perfil/auxiliar", { replace: true });
+      }
+
       if (error) {
         setError(error || "");
       }
@@ -99,12 +108,12 @@ const Login = () => {
           </div>
           {err && <ErrorComponent err={err} />}
           <p className="text-center text-gray-500 text-xs mt-4">
-            ¿No tienes una cuenta?{" "}
+            ¿No recuerdo mi contrasena?{" "}
             <NavLink
-              to="/Registro"
+              to="/Recuperar-cuenta"
               className="font-semibold text-blue-500 hover:text-blue-800"
             >
-              Regístrate
+              Recuperar
             </NavLink>
           </p>
         </form>

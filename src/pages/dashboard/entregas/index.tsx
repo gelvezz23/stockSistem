@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Modal from "../../../components/Modal";
 
 // Definimos un tipo para la entrega, útil para TypeScript
@@ -17,14 +17,15 @@ const EntregaList = () => {
   const [entregas, setEntregas] = useState<any>([]); // Usamos el tipo Entrega[]
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [observacion, setObservacion] = useState("");
   console.log("AAA", entregas);
   // Estados para la edición
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEntrega, setSelectedEntrega] = useState<any | null>(null);
   const [newEstado, setNewEstado] = useState("");
   const [isUpdating, setIsUpdating] = useState(false); // Para mostrar estado de actualización
-  console.log("DDD", selectedEntrega);
-  // Función para obtener las entregas (se usará también después de una actualización)
+
   const fetchEntregas = async () => {
     try {
       const response = await fetch(
@@ -48,6 +49,21 @@ const EntregaList = () => {
       setLoading(false);
     }
   };
+
+  const fechaInicioFormateada = useCallback(() => {
+    return `${selectedDate}`;
+  }, [selectedDate]);
+
+  const [minDate, setMinDate] = useState("");
+
+  useEffect(() => {
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Meses son 0-indexados
+    const day = String(today.getDate()).padStart(2, "0");
+    setMinDate(`${year}-${month}-${day}`);
+  }, []);
 
   useEffect(() => {
     fetchEntregas();
@@ -80,7 +96,11 @@ const EntregaList = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ estado: newEstado }),
+          body: JSON.stringify({
+            estado: newEstado,
+            fecha_envio: fechaInicioFormateada(),
+            observacion,
+          }),
         }
       );
       window.location.reload();
@@ -220,8 +240,25 @@ const EntregaList = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => openEditModal(entrega)}
-                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md transition duration-150 ease-in-out"
+                        className="flex items-center text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md transition duration-150 ease-in-out"
                       >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          className="icon icon-tabler icons-tabler-outline icon-tabler-edit"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                          <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                          <path d="M16 5l3 3" />
+                        </svg>{" "}
                         Editar Estado
                       </button>
                     </td>
@@ -248,6 +285,41 @@ const EntregaList = () => {
                   {selectedEntrega?.nombre_cliente}
                 </span>
               </p>
+
+              <div className="col-span-full">
+                <label
+                  htmlFor="horaCita"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Fecha de cita
+                </label>
+
+                <input
+                  type="date"
+                  id="fechaCita"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  min={minDate}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="horaCita"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  observacion
+                </label>
+
+                <textarea
+                  id="observacion"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  rows={2}
+                  value={observacion}
+                  onChange={(e) => setObservacion(e.target.value)}
+                ></textarea>
+              </div>
 
               <div className="mb-4">
                 <label
