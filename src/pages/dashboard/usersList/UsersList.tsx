@@ -4,8 +4,10 @@ import "./styles.css";
 import Modal from "../../../components/Modal";
 import { FormsClient } from "./form";
 import useUpdateUserStatus from "../../../utils/hook/useUpdateStatus";
+import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
 
 export const UsersList = () => {
+  const { storage } = useSessionStorage("user", null);
   const [users, setUsers] = useState<any>([]);
   const [errorState, setError] = useState<any>(null);
   const [openModalId, setOpenModalId] = useState<number | null>(null); // Estado para el ID del modal abierto
@@ -42,9 +44,17 @@ export const UsersList = () => {
         }
       );
       if (!response.ok) setError("Usuarios no encontrados");
-
+      let dataFull = null;
       const data = await response.json();
-      const dataFull = data.filter((item: any) => item.rol_id !== 5);
+      if (storage.thereIsAdmin) {
+        dataFull = data.filter((item: any) => item.rol_id !== 5);
+      } else {
+        dataFull = data.filter(
+          (item: any) =>
+            item.rol_id !== 5 && item.rol_id !== 3 && item.rol_id !== 2
+        );
+      }
+
       setUsers(dataFull);
     };
     getUsers();

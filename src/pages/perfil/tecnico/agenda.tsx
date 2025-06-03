@@ -88,12 +88,6 @@ const ListarCitasPerfil = () => {
     return <div className="text-red-500">{error}</div>;
   }
 
-  function generarCodigoDe4Digitos() {
-    const numero = Math.floor(Math.random() * 10000);
-
-    return String(numero).padStart(4, "0");
-  }
-
   const compareFechaCitas = (cita: any) => {
     const fechaCita = new Date(cita.fecha_inicio);
     const fechaActual = new Date();

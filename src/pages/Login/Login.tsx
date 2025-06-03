@@ -45,7 +45,7 @@ const Login = () => {
       }
 
       if (thereIsAuxiliar) {
-        navigate("/perfil/auxiliar", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
 
       if (error) {

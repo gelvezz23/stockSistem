@@ -1,6 +1,8 @@
 import { NavLink } from "react-router";
+import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
 
 const Menu = () => {
+  const { storage } = useSessionStorage("user", null);
   return (
     <div className="bg-gray-900 shadow-md rounded-md p-4 w-64">
       <h4 className="text-md font-semibold text-white-700 mt-4 mb-1">Citas</h4>
@@ -31,37 +33,40 @@ const Menu = () => {
           </NavLink>
         </li>
       </ul>
-
-      <h4 className="text-md font-semibold text-white-700 mt-4 mb-1">
-        Proveedores
-      </h4>
-      <hr className="border-t border-white-300 my-2" />
-      <ul className="list-none pl-0">
-        <li className="mb-1">
-          <NavLink
-            to="providers/list"
-            className={({ isActive }) =>
-              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
-                isActive ? "bg-blue-500 text-white" : ""
-              }`
-            }
-          >
-            Ver Proveedor
-          </NavLink>
-        </li>
-        <li className="mb-1">
-          <NavLink
-            to="providers/create"
-            className={({ isActive }) =>
-              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
-                isActive ? "bg-blue-500 text-white" : ""
-              }`
-            }
-          >
-            Crear Proveedor
-          </NavLink>
-        </li>
-      </ul>
+      {storage?.thereIsAdmin && (
+        <>
+          <h4 className="text-md font-semibold text-white-700 mt-4 mb-1">
+            Proveedores
+          </h4>
+          <hr className="border-t border-white-300 my-2" />
+          <ul className="list-none pl-0">
+            <li className="mb-1">
+              <NavLink
+                to="providers/list"
+                className={({ isActive }) =>
+                  `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                    isActive ? "bg-blue-500 text-white" : ""
+                  }`
+                }
+              >
+                Ver Proveedor
+              </NavLink>
+            </li>
+            <li className="mb-1">
+              <NavLink
+                to="providers/create"
+                className={({ isActive }) =>
+                  `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                    isActive ? "bg-blue-500 text-white" : ""
+                  }`
+                }
+              >
+                Crear Proveedor
+              </NavLink>
+            </li>
+          </ul>
+        </>
+      )}
 
       <h4 className="text-md font-semibold text-white-700 mt-4 mb-1">
         Usuarios
@@ -92,18 +97,20 @@ const Menu = () => {
             Crear Usuario
           </NavLink>
         </li>
-        <li className="mb-1">
-          <NavLink
-            to="users/forgotPassword"
-            className={({ isActive }) =>
-              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
-                isActive ? "bg-blue-500 text-white" : ""
-              }`
-            }
-          >
-            recuper contrasena
-          </NavLink>
-        </li>
+        {storage?.thereIsAdmin && (
+          <li className="mb-1">
+            <NavLink
+              to="users/forgotPassword"
+              className={({ isActive }) =>
+                `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                  isActive ? "bg-blue-500 text-white" : ""
+                }`
+              }
+            >
+              recuper contrasena
+            </NavLink>
+          </li>
+        )}
       </ul>
 
       <h4 className="text-md font-semibold text-white-700 mt-4 mb-1">
@@ -111,18 +118,20 @@ const Menu = () => {
       </h4>
       <hr className="border-t border-white-300 my-2" />
       <ul className="list-none pl-0">
-        <li className="mb-1">
-          <NavLink
-            to="products/create"
-            className={({ isActive }) =>
-              `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
-                isActive ? "bg-blue-500 text-white" : ""
-              }`
-            }
-          >
-            Crear Productos
-          </NavLink>
-        </li>
+        {storage?.thereIsAdmin && (
+          <li className="mb-1">
+            <NavLink
+              to="products/create"
+              className={({ isActive }) =>
+                `block py-2 px-4 rounded-md text-white-600 hover:bg-gray-200 hover:text-gray-800 ${
+                  isActive ? "bg-blue-500 text-white" : ""
+                }`
+              }
+            >
+              Crear Productos
+            </NavLink>
+          </li>
+        )}
         <li className="mb-1">
           <NavLink
             to="products/viewStock"

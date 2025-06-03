@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import "./styles.css";
 import { generarSKU } from "../../../utils/generateSku";
+import { useSessionStorage } from "../../../utils/hook/useSessionStorage";
 
 const Create = ({ productData }: { productData: any }) => {
   const url = import.meta.env.VITE_BACK_URL || "";
   const [lastId, setLastId] = useState(productData?.producto_id || 0);
+  const { storage } = useSessionStorage("user", null);
   const [categorias, setCategorias] = useState<any[]>([]); // Estado para almacenar las categorías
   const [categoriasError, setCategoriasError] = useState<string | null>(null);
   const [categoriasLoading, setCategoriasLoading] = useState(true);
@@ -211,268 +213,503 @@ const Create = ({ productData }: { productData: any }) => {
   return (
     <section className="productForm w-full">
       <h1>Ingrese los Datos del Producto</h1>
+      {!storage.thereIsAdmin ? (
+        <form id="productoForm" onSubmit={handleSubmit}>
+          <div className="form-group w-full hidden">
+            <label htmlFor="nombre_producto">Nombre del Producto:</label>
+            <input
+              className="w-full"
+              type="text"
+              id="nombre_producto"
+              name="nombre_producto"
+              onChange={handleChange}
+              disabled={productData?.nombre_producto}
+              value={productos?.nombre_producto}
+              required
+            />
+          </div>
 
-      <form id="productoForm" onSubmit={handleSubmit}>
-        <div className="form-group w-full">
-          <label htmlFor="nombre_producto">Nombre del Producto:</label>
-          <input
-            className="w-full"
-            type="text"
-            id="nombre_producto"
-            name="nombre_producto"
-            onChange={handleChange}
-            disabled={productData?.nombre_producto}
-            value={productos?.nombre_producto}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <div>
-              <label htmlFor="stock">Cantidad:</label>
-              <input
-                min="1"
-                type="number"
-                id="stock"
-                name="stock"
-                disabled={productData?.stock}
-                onChange={handleChange}
-                value={Number(productos.stock) + Number(moreStock)}
-                required
-              />
-            </div>
-            <div>
-              <label>
-                <br />
-              </label>
-              <button
-                className=" flex bg-gray-800 p-2"
-                type="button"
-                onClick={() => {
-                  setViewInputStock(!viewInputStock);
-                  setMoreStock(0);
-                }}
-              >
-                {viewInputStock ? "X" : "+ agregar mas cantidad"}
-              </button>
-            </div>
-
-            {viewInputStock && (
+          <div className="form-group">
+            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
               <div>
-                <label htmlFor="stock">Agregar:</label>
+                <label htmlFor="stock">Cantidad:</label>
                 <input
                   min="1"
                   type="number"
                   id="stock"
-                  name="moreStock"
-                  onChange={(e) => setMoreStock(Number(e.target.value))}
-                  value={moreStock === 0 ? "" : moreStock}
+                  name="stock"
+                  disabled={productData?.stock}
+                  onChange={handleChange}
+                  value={Number(productos.stock) + Number(moreStock)}
+                  required
                 />
               </div>
+              <div>
+                <label>
+                  <br />
+                </label>
+                <button
+                  className=" flex bg-gray-800 p-2"
+                  type="button"
+                  onClick={() => {
+                    setViewInputStock(!viewInputStock);
+                    setMoreStock(0);
+                  }}
+                >
+                  {viewInputStock ? "X" : "+ agregar mas cantidad"}
+                </button>
+              </div>
+
+              {viewInputStock && (
+                <div>
+                  <label htmlFor="stock">Agregar:</label>
+                  <input
+                    min="1"
+                    type="number"
+                    id="stock"
+                    name="moreStock"
+                    onChange={(e) => setMoreStock(Number(e.target.value))}
+                    value={moreStock === 0 ? "" : moreStock}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="stock_minimo">Cantidad Minima:</label>
+            <input
+              type="number"
+              id="stock_minimo"
+              min="1"
+              name="stock_minimo"
+              onChange={handleChange}
+              value={productos.stock_minimo}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="descripcion">Descripción:</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              onChange={handleChange}
+              value={productos.descripcion}
+              rows={5}
+            ></textarea>
+          </div>
+
+          <div className="form-group hidden">
+            <label htmlFor="precio_venta">Precio de venta:</label>
+            <input
+              type="number"
+              id="precio_venta"
+              name="precio_venta"
+              min="0"
+              step="0.01"
+              onChange={handleChange}
+              value={productos.precio_venta}
+              required
+            />
+          </div>
+
+          <div className="form-group hidden">
+            <label htmlFor="image_url">URL de la Imagen:</label>
+            <input
+              type="text"
+              id="image_url"
+              name="image_url"
+              onChange={handleChange}
+              value={productos.image_url}
+            />
+          </div>
+
+          <div className="image-preview-container hidden">
+            <label>Vista Previa de la Imagen:</label>
+            <img
+              id="vistaPrevia"
+              src={productos.image_url}
+              alt="Vista previa de la imagen"
+              className="image-preview"
+            />
+            <p id="mensajeNoImagen">Ingrese una URL para ver la imagen.</p>
+          </div>
+
+          <div className="form-group hidden">
+            <label htmlFor="marca">Marca:</label>
+            <input
+              type="text"
+              id="marca"
+              name="marca"
+              disabled={productData?.marca}
+              onChange={handleChange}
+              value={productos?.marca}
+              required
+            />
+          </div>
+
+          <div className="form-group hidden">
+            <label htmlFor="categoria_id">Categoria:</label>
+            {categoriasLoading ? (
+              <p>Cargando categorías...</p>
+            ) : categoriasError ? (
+              <p className="error-message">{categoriasError}</p>
+            ) : (
+              <select
+                name="categoria_id"
+                onChange={handleChange}
+                value={productos.categoria_id}
+                disabled={productData?.categoria_id}
+                required
+              >
+                <option value="">Seleccione una categoría</option>
+                {categorias.map(
+                  (categoria: { categoria_id: any; nombre_categoria: any }) => (
+                    <option
+                      key={categoria.categoria_id}
+                      value={categoria.categoria_id}
+                    >
+                      {categoria.nombre_categoria}
+                    </option>
+                  )
+                )}
+              </select>
             )}
           </div>
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="stock_minimo">Cantidad Minima:</label>
-          <input
-            type="number"
-            id="stock_minimo"
-            min="1"
-            name="stock_minimo"
-            onChange={handleChange}
-            value={productos.stock_minimo}
-            required
-          />
-        </div>
+          <div className="form-group hidden">
+            <label htmlFor="proveedor_id">Proveedor:</label>
 
-        <div className="form-group">
-          <label htmlFor="descripcion">Descripción:</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            onChange={handleChange}
-            value={productos.descripcion}
-            rows={5}
-          ></textarea>
-        </div>
+            {proveedoresLoading ? (
+              <p>Cargando proveedores...</p>
+            ) : proveedoresError ? (
+              <p className="error-message">{proveedoresError}</p>
+            ) : (
+              <select
+                name="proveedor_id"
+                id="proveedor_id"
+                onChange={handleChange}
+                value={productos.proveedor_id}
+                disabled={productData?.proveedor_id}
+                required
+              >
+                <option value="">Seleccione un proveedor</option>
+                {proveedores.map(
+                  (proveedor: { proveedor_id: any; email: any }) => {
+                    console.log(proveedor);
+                    return (
+                      <option
+                        key={proveedor.proveedor_id}
+                        value={proveedor.proveedor_id}
+                      >
+                        {proveedor.email}
+                      </option>
+                    );
+                  }
+                )}
+              </select>
+            )}
+          </div>
 
-        {/*<div className="form-group">
-          <label htmlFor="precio_costo">Precio de costo:</label>
-          <input
-            type="number"
-            id="precio_costo"
-            name="precio_costo"
-            min="0"
-            step="0.01"
-            onChange={handleChange}
-            value={productos.precio_costo}
-            required
-          />
-        </div> */}
+          <div className="form-group hidden">
+            <label htmlFor="estado">Estado:</label>
 
-        <div className="form-group">
-          <label htmlFor="precio_venta">Precio de venta:</label>
-          <input
-            type="number"
-            id="precio_venta"
-            name="precio_venta"
-            min="0"
-            step="0.01"
-            onChange={handleChange}
-            value={productos.precio_venta}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="image_url">URL de la Imagen:</label>
-          <input
-            type="text"
-            id="image_url"
-            name="image_url"
-            onChange={handleChange}
-            value={productos.image_url}
-          />
-        </div>
-
-        <div className="image-preview-container">
-          <label>Vista Previa de la Imagen:</label>
-          <img
-            id="vistaPrevia"
-            src={productos.image_url}
-            alt="Vista previa de la imagen"
-            className="image-preview"
-          />
-          <p id="mensajeNoImagen">Ingrese una URL para ver la imagen.</p>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="marca">Marca:</label>
-          <input
-            type="text"
-            id="marca"
-            name="marca"
-            disabled={productData?.marca}
-            onChange={handleChange}
-            value={productos?.marca}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="categoria_id">Categoria:</label>
-          {categoriasLoading ? (
-            <p>Cargando categorías...</p>
-          ) : categoriasError ? (
-            <p className="error-message">{categoriasError}</p>
-          ) : (
             <select
-              name="categoria_id"
+              name="estado"
+              id="estado"
               onChange={handleChange}
-              value={productos.categoria_id}
-              disabled={productData?.categoria_id}
-              required
+              value={productos.estado}
             >
-              <option value="">Seleccione una categoría</option>
-              {categorias.map(
-                (categoria: { categoria_id: any; nombre_categoria: any }) => (
-                  <option
-                    key={categoria.categoria_id}
-                    value={categoria.categoria_id}
-                  >
-                    {categoria.nombre_categoria}
-                  </option>
-                )
-              )}
+              <option>Seleccione</option>
+
+              <option value="disponible">Disponible</option>
+              <option value="no disponible">No disponible</option>
             </select>
-          )}
-        </div>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="proveedor_id">Proveedor:</label>
-
-          {proveedoresLoading ? (
-            <p>Cargando proveedores...</p>
-          ) : proveedoresError ? (
-            <p className="error-message">{proveedoresError}</p>
-          ) : (
-            <select
-              name="proveedor_id"
-              id="proveedor_id"
+          <div className="form-group hidden">
+            <label htmlFor="codigo">Codigo:</label>
+            <input
+              type="text"
+              id="codigo"
+              name="codigo"
+              value={productos?.codigo}
               onChange={handleChange}
-              value={productos.proveedor_id}
-              disabled={productData?.proveedor_id}
+              disabled={productData?.codigo}
               required
-            >
-              <option value="">Seleccione un proveedor</option>
-              {proveedores.map(
-                (proveedor: { proveedor_id: any; email: any }) => {
-                  console.log(proveedor);
-                  return (
+            />
+          </div>
+
+          <div className="form-group hidden">
+            <label htmlFor="sku">Sku:</label>
+            <input
+              type="text"
+              id="sku"
+              name="sku"
+              value={productos?.sku}
+              onChange={handleChange}
+              disabled={true}
+              required
+            />
+          </div>
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando..." : "Guardar Producto"}
+          </button>
+
+          {submitSuccess && <p style={{ color: "green" }}>{submitSuccess}</p>}
+          {submitError && <p style={{ color: "red" }}>{submitError}</p>}
+        </form>
+      ) : (
+        <form id="productoForm" onSubmit={handleSubmit}>
+          <div className="form-group w-full">
+            <label htmlFor="nombre_producto">Nombre del Producto:</label>
+            <input
+              className="w-full"
+              type="text"
+              id="nombre_producto"
+              name="nombre_producto"
+              onChange={handleChange}
+              disabled={productData?.nombre_producto}
+              value={productos?.nombre_producto}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <div>
+                <label htmlFor="stock">Cantidad:</label>
+                <input
+                  min="1"
+                  type="number"
+                  id="stock"
+                  name="stock"
+                  disabled={productData?.stock}
+                  onChange={handleChange}
+                  value={Number(productos.stock) + Number(moreStock)}
+                  required
+                />
+              </div>
+              <div>
+                <label>
+                  <br />
+                </label>
+                <button
+                  className=" flex bg-gray-800 p-2"
+                  type="button"
+                  onClick={() => {
+                    setViewInputStock(!viewInputStock);
+                    setMoreStock(0);
+                  }}
+                >
+                  {viewInputStock ? "X" : "+ agregar mas cantidad"}
+                </button>
+              </div>
+
+              {viewInputStock && (
+                <div>
+                  <label htmlFor="stock">Agregar:</label>
+                  <input
+                    min="1"
+                    type="number"
+                    id="stock"
+                    name="moreStock"
+                    onChange={(e) => setMoreStock(Number(e.target.value))}
+                    value={moreStock === 0 ? "" : moreStock}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="stock_minimo">Cantidad Minima:</label>
+            <input
+              type="number"
+              id="stock_minimo"
+              min="1"
+              name="stock_minimo"
+              onChange={handleChange}
+              value={productos.stock_minimo}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="descripcion">Descripción:</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              onChange={handleChange}
+              value={productos.descripcion}
+              rows={5}
+            ></textarea>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="precio_venta">Precio de venta:</label>
+            <input
+              type="number"
+              id="precio_venta"
+              name="precio_venta"
+              min="0"
+              step="0.01"
+              onChange={handleChange}
+              value={productos.precio_venta}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="image_url">URL de la Imagen:</label>
+            <input
+              type="text"
+              id="image_url"
+              name="image_url"
+              onChange={handleChange}
+              value={productos.image_url}
+            />
+          </div>
+
+          <div className="image-preview-container">
+            <label>Vista Previa de la Imagen:</label>
+            <img
+              id="vistaPrevia"
+              src={productos.image_url}
+              alt="Vista previa de la imagen"
+              className="image-preview"
+            />
+            <p id="mensajeNoImagen">Ingrese una URL para ver la imagen.</p>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="marca">Marca:</label>
+            <input
+              type="text"
+              id="marca"
+              name="marca"
+              disabled={productData?.marca}
+              onChange={handleChange}
+              value={productos?.marca}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="categoria_id">Categoria:</label>
+            {categoriasLoading ? (
+              <p>Cargando categorías...</p>
+            ) : categoriasError ? (
+              <p className="error-message">{categoriasError}</p>
+            ) : (
+              <select
+                name="categoria_id"
+                onChange={handleChange}
+                value={productos.categoria_id}
+                disabled={productData?.categoria_id}
+                required
+              >
+                <option value="">Seleccione una categoría</option>
+                {categorias.map(
+                  (categoria: { categoria_id: any; nombre_categoria: any }) => (
                     <option
-                      key={proveedor.proveedor_id}
-                      value={proveedor.proveedor_id}
+                      key={categoria.categoria_id}
+                      value={categoria.categoria_id}
                     >
-                      {proveedor.email}
+                      {categoria.nombre_categoria}
                     </option>
-                  );
-                }
-              )}
+                  )
+                )}
+              </select>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="proveedor_id">Proveedor:</label>
+
+            {proveedoresLoading ? (
+              <p>Cargando proveedores...</p>
+            ) : proveedoresError ? (
+              <p className="error-message">{proveedoresError}</p>
+            ) : (
+              <select
+                name="proveedor_id"
+                id="proveedor_id"
+                onChange={handleChange}
+                value={productos.proveedor_id}
+                disabled={productData?.proveedor_id}
+                required
+              >
+                <option value="">Seleccione un proveedor</option>
+                {proveedores.map(
+                  (proveedor: { proveedor_id: any; email: any }) => {
+                    console.log(proveedor);
+                    return (
+                      <option
+                        key={proveedor.proveedor_id}
+                        value={proveedor.proveedor_id}
+                      >
+                        {proveedor.email}
+                      </option>
+                    );
+                  }
+                )}
+              </select>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="estado">Estado:</label>
+
+            <select
+              name="estado"
+              id="estado"
+              onChange={handleChange}
+              value={productos.estado}
+            >
+              <option>Seleccione</option>
+
+              <option value="disponible">Disponible</option>
+              <option value="no disponible">No disponible</option>
             </select>
-          )}
-        </div>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="estado">Estado:</label>
+          <div className="form-group">
+            <label htmlFor="codigo">Codigo:</label>
+            <input
+              type="text"
+              id="codigo"
+              name="codigo"
+              value={productos?.codigo}
+              onChange={handleChange}
+              disabled={productData?.codigo}
+              required
+            />
+          </div>
 
-          <select
-            name="estado"
-            id="estado"
-            onChange={handleChange}
-            value={productos.estado}
-          >
-            <option>Seleccione</option>
+          <div className="form-group hidden">
+            <label htmlFor="sku">Sku:</label>
+            <input
+              type="text"
+              id="sku"
+              name="sku"
+              value={productos?.sku}
+              onChange={handleChange}
+              disabled={true}
+              required
+            />
+          </div>
 
-            <option value="disponible">Disponible</option>
-            <option value="no disponible">No disponible</option>
-          </select>
-        </div>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando..." : "Guardar Producto"}
+          </button>
 
-        <div className="form-group">
-          <label htmlFor="codigo">Codigo:</label>
-          <input
-            type="text"
-            id="codigo"
-            name="codigo"
-            value={productos?.codigo}
-            onChange={handleChange}
-            disabled={productData?.codigo}
-            required
-          />
-        </div>
-
-        <div className="form-group hidden">
-          <label htmlFor="sku">Sku:</label>
-          <input
-            type="text"
-            id="sku"
-            name="sku"
-            value={productos?.sku}
-            onChange={handleChange}
-            disabled={true}
-            required
-          />
-        </div>
-
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Guardando..." : "Guardar Producto"}
-        </button>
-
-        {submitSuccess && <p style={{ color: "green" }}>{submitSuccess}</p>}
-        {submitError && <p style={{ color: "red" }}>{submitError}</p>}
-      </form>
+          {submitSuccess && <p style={{ color: "green" }}>{submitSuccess}</p>}
+          {submitError && <p style={{ color: "red" }}>{submitError}</p>}
+        </form>
+      )}
     </section>
   );
 };
