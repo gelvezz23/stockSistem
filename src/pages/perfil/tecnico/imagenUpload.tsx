@@ -11,7 +11,7 @@ const ImageUploaderFetch = ({ id }: { id: any }) => {
   };
   ///citas/update_evidencia/:id
 
-  const handleUploadInBD = async () => {
+  const handleUploadInBD = async (urlData: string) => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACK_URL}/api/citas/update_evidencia/${id}`,
@@ -21,9 +21,7 @@ const ImageUploaderFetch = ({ id }: { id: any }) => {
             "Content-Type": "application/json", // Indicamos que el cuerpo de la solicitud es JSON
           },
           body: JSON.stringify({
-            imagen_evidencia: `${import.meta.env.VITE_BACK_URL}${
-              uploadResult.url
-            }`,
+            imagen_evidencia: `${import.meta.env.VITE_BACK_URL}${urlData}`,
           }), // Convertimos el objeto JavaScript 'body' a una cadena JSON
         }
       );
@@ -69,7 +67,7 @@ const ImageUploaderFetch = ({ id }: { id: any }) => {
 
       const result = await response.json();
       setUploadResult(result);
-      handleUploadInBD();
+      handleUploadInBD(result.url);
     } catch (error) {
       console.error("Error:", error);
       alert("Ocurrió un error al subir la imagen.");
@@ -80,7 +78,7 @@ const ImageUploaderFetch = ({ id }: { id: any }) => {
     <div className="  flex items-center justify-center p-4">
       <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full border border-blue-200">
         <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">
-          Subir Imagen
+          Subir Evidencia
         </h2>
 
         <form onSubmit={handleUpload} className="space-y-6">
@@ -136,7 +134,7 @@ const ImageUploaderFetch = ({ id }: { id: any }) => {
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline break-all"
                 >
-                  {uploadResult.path}
+                  {`${import.meta.env.VITE_BACK_URL}${uploadResult.url}`}
                 </a>
               </p>
               <p className="text-sm text-gray-600">

@@ -66,6 +66,9 @@ export const UsersList = () => {
                   Documento
                 </th>
                 <th className="py-3 px-6 text-left font-semibold text-gray-700">
+                  Nombre
+                </th>
+                <th className="py-3 px-6 text-left font-semibold text-gray-700">
                   Email
                 </th>
                 <th className="py-3 px-6 text-left font-semibold text-gray-700">
@@ -99,6 +102,9 @@ export const UsersList = () => {
                     )}
                     <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900 ">
                       {user.documento}
+                    </td>
+                    <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900 ">
+                      {user.nombre_usuario}
                     </td>
                     <td className="py-3 px-4 text-left whitespace-nowrap text-gray-900">
                       {user.email}

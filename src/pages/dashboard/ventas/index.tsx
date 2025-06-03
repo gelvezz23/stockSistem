@@ -263,7 +263,8 @@ export const Ventas = () => {
                               className="text-gray-500 flex flex-col mb-2 border-b border-gray-300 pb-2"
                             >
                               <span className="font-semibold">
-                                Detalle ID: {detalle.detalle_id}
+                                Detalle ID:{" "}
+                                {`${formattedDate}_${detalle.detalle_id}`}
                               </span>
                               <span className="font-semibold">
                                 Producto Original: {detalle.nombre_producto}{" "}

@@ -2,12 +2,17 @@
 import { useState, useEffect, useCallback } from "react";
 import Modal from "../../../components/Modal";
 import { DateTimer } from "./dateTimer";
+import { IconoEditar } from "../../../components/iconos/iconoEditar";
+import { IconoReagendar } from "../../../components/iconos/iconoReagendar";
+import { IconoProceso } from "../../../components/iconos/iconoProceso";
+import { IconoCancelar } from "../../../components/iconos/iconoCancelar";
 
 const ListarCitas = () => {
   const [citas, setCitas] = useState<any>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [open, setModal] = useState(false);
+  const [open2, setModal2] = useState(false);
   const [direccion, setDireccion] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [showTime, setShowTime] = useState(false);
@@ -166,6 +171,21 @@ const ListarCitas = () => {
     return <div className="text-red-500">{error}</div>;
   }
 
+  const compareFechaCitas = (cita: any) => {
+    const fechaCita = new Date(cita.fecha_inicio);
+    const fechaActual = new Date();
+    console.log("TT", fechaCita < fechaActual);
+    if (fechaCita < fechaActual) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleOpenDataModal = (cita: any) => {
+    setSelectedClient(cita.servicio_id);
+    setDireccionActual(cita.direccion_servicio);
+  };
+
   return (
     <div className="container mx-auto py-8 text-gray-900">
       <h1 className="text-2xl font-semibold mb-4 text-gray-800">
@@ -205,6 +225,9 @@ const ListarCitas = () => {
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Descripción
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  Solución
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Evidencia
@@ -250,6 +273,9 @@ const ListarCitas = () => {
                       {cita.descripcion_problema}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.solucion}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {cita.imagen_evidencia ? (
                         <img
                           src={cita?.imagen_evidencia}
@@ -260,201 +286,62 @@ const ListarCitas = () => {
                       )}
                     </td>
 
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm flex flex-col gap-2">
-                      <button
-                        className="flex items-center"
-                        onClick={() => {
-                          setModal(!open);
-                          setSelectedClient(cita.servicio_id);
-                          setDireccionActual(cita.direccion_servicio);
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="icon icon-tabler icons-tabler-outline icon-tabler-edit"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                          <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                          <path d="M16 5l3 3" />
-                        </svg>{" "}
-                        editar
-                      </button>
+                    <td className="px-2 py-5 border-b h-[7rem] w-[8rem] border-gray-200 bg-white text-sm flex flex-col gap-2">
+                      {compareFechaCitas(cita) ? (
+                        <>
+                          <button
+                            className="flex items-center "
+                            onClick={() => {
+                              alert(
+                                "No puede editar ni cancelar esta cita. Ya esta en proceso."
+                              );
+                            }}
+                          >
+                            <IconoProceso /> En proceso
+                          </button>
+                          <button
+                            className="flex items-center"
+                            onClick={() => {
+                              handleOpenDataModal(cita);
+                              setModal2(!open2);
+                            }}
+                          >
+                            <IconoReagendar /> reagendar
+                          </button>
+                        </>
+                      ) : (
+                        <div className=" flex flex-col gap-2 h-[6rem]">
+                          <button
+                            className="flex items-center"
+                            onClick={() => {
+                              handleOpenDataModal(cita);
+                              setModal2(!open2);
+                            }}
+                          >
+                            <IconoReagendar /> reagendar
+                          </button>
 
-                      <button
-                        className="flex items-center"
-                        onClick={() => {
-                          handleDeleteCita(cita.servicio_id);
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="icon icon-tabler icons-tabler-outline icon-tabler-trash"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M4 7l16 0" />
-                          <path d="M10 11l0 6" />
-                          <path d="M14 11l0 6" />
-                          <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                          <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                        </svg>{" "}
-                        eliminar
-                      </button>
+                          <button
+                            className="flex items-center"
+                            onClick={() => {
+                              handleOpenDataModal(cita);
+                              setModal(!open);
+                            }}
+                          >
+                            <IconoEditar /> editar
+                          </button>
+
+                          <button
+                            className="flex items-center"
+                            onClick={() => {
+                              handleDeleteCita(cita.servicio_id);
+                            }}
+                          >
+                            <IconoCancelar /> cancelar
+                          </button>
+                        </div>
+                      )}
                     </td>
-                    <Modal isOpen={open} onClose={() => setModal(!open)}>
-                      <h1 className="text-black">Reagendar Cita</h1>
-                      <form
-                        className="h-full w-full p-[1rem]"
-                        onSubmit={handleSubmit}
-                      >
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="horaCita"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            Fecha de cita (opcional)
-                          </label>
-
-                          <input
-                            type="date"
-                            id="fechaCita"
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                            min={minDate}
-                          />
-                        </div>
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="horaCita"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            Hora de cita (opcional)
-                          </label>
-                          <div className="flex flex-col">
-                            <button
-                              className="flex w-full gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                              type="button"
-                              onClick={handleShowSelectTimer}
-                            >
-                              Seleccionar{" "}
-                              {selectedTime ? (
-                                <span className=" text-gray-700">
-                                  Hora: {selectedTime}
-                                </span>
-                              ) : (
-                                <span className=" text-gray-700">
-                                  Hora: ...
-                                </span>
-                              )}
-                            </button>
-                            {showTime && (
-                              <DateTimer
-                                citas={citas}
-                                fechaInicioFormateada={fecha}
-                                handleShowSelectTimer={handleShowSelectTimer}
-                                selectedTime={selectedTime}
-                                setSelectedTime={setSelectedTime}
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="descripcion"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            Direccion de la cita. (opcional)
-                          </label>
-                          <textarea
-                            id="direccion"
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            rows={1}
-                            value={direccion}
-                            onChange={(e) => setDireccion(e.target.value)}
-                          ></textarea>
-                          <p className="text-black mb-2">
-                            Direccion actual: {cita.direccion_servicio}
-                          </p>
-                        </div>
-
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="descripcion"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            Tiene Garantia (opcional)
-                          </label>
-
-                          <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            onChange={(e) => setGarantia(e.target.value)}
-                          >
-                            <option>Seleccione una opcion</option>
-                            <option value="No"> No</option>
-                            <option value="Si"> Si</option>
-                          </select>
-                        </div>
-
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="descripcion"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            Estado (opcional)
-                          </label>
-
-                          <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            onChange={(e) => setestado(e.target.value)}
-                          >
-                            <option>Seleccione una opcion</option>
-                            <option value="pendiente"> pendiente</option>
-                            <option value="en garantia"> en garantia</option>
-                            <option value="terminado"> terminado</option>
-                          </select>
-                        </div>
-
-                        <div className="col-span-full">
-                          <label
-                            htmlFor="descripcion"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                          >
-                            Descripcion. (opcional)
-                          </label>
-                          <textarea
-                            id="descripcion"
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            rows={2}
-                            value={descripcion}
-                            onChange={(e) => setDescripcion(e.target.value)}
-                          ></textarea>
-                        </div>
-
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                          type="submit"
-                        >
-                          Enviar
-                        </button>
-                      </form>
-                    </Modal>
                   </tr>
                 );
               })}
@@ -462,6 +349,148 @@ const ListarCitas = () => {
           </table>
         </div>
       )}
+
+      <Modal isOpen={open} onClose={() => setModal(!open)}>
+        <form className="h-full w-full p-[1rem]" onSubmit={handleSubmit}>
+          <div className="col-span-full">
+            <label
+              htmlFor="descripcion"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Direccion de la cita. (opcional)
+            </label>
+            <textarea
+              id="direccion"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              rows={1}
+              value={direccion}
+              onChange={(e) => setDireccion(e.target.value)}
+            ></textarea>
+            <p className="text-black mb-2">
+              Direccion actual: {direccionActual}
+            </p>
+          </div>
+
+          <div className="col-span-full">
+            <label
+              htmlFor="descripcion"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Tiene Garantia (opcional)
+            </label>
+
+            <select
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={(e) => setGarantia(e.target.value)}
+            >
+              <option>Seleccione una opcion</option>
+              <option value="No"> No</option>
+              <option value="Si"> Si</option>
+            </select>
+          </div>
+
+          <div className="col-span-full">
+            <label
+              htmlFor="descripcion"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Estado (opcional)
+            </label>
+
+            <select
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={(e) => setestado(e.target.value)}
+            >
+              <option>Seleccione una opcion</option>
+              <option value="pendiente"> pendiente</option>
+              <option value="en garantia"> en garantia</option>
+              <option value="terminado"> terminado</option>
+            </select>
+          </div>
+
+          <div className="col-span-full">
+            <label
+              htmlFor="descripcion"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Descripcion. (opcional)
+            </label>
+            <textarea
+              id="descripcion"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              rows={2}
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+            ></textarea>
+          </div>
+
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Enviar
+          </button>
+        </form>
+      </Modal>
+
+      <Modal isOpen={open2} onClose={() => setModal2(!open2)}>
+        <form className="h-full w-full p-[1rem]" onSubmit={handleSubmit}>
+          <div className="col-span-full">
+            <label
+              htmlFor="horaCita"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Fecha de cita (opcional)
+            </label>
+
+            <input
+              type="date"
+              id="fechaCita"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              min={minDate}
+            />
+          </div>
+          <div className="col-span-full">
+            <label
+              htmlFor="horaCita"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Hora de cita (opcional)
+            </label>
+            <div className="flex flex-col">
+              <button
+                className="flex w-full gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                type="button"
+                onClick={handleShowSelectTimer}
+              >
+                Seleccionar{" "}
+                {selectedTime ? (
+                  <span className=" text-gray-700">Hora: {selectedTime}</span>
+                ) : (
+                  <span className=" text-gray-700">Hora: ...</span>
+                )}
+              </button>
+              {showTime && (
+                <DateTimer
+                  citas={citas}
+                  fechaInicioFormateada={fecha}
+                  handleShowSelectTimer={handleShowSelectTimer}
+                  selectedTime={selectedTime}
+                  setSelectedTime={setSelectedTime}
+                />
+              )}
+            </div>
+          </div>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Enviar
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };
