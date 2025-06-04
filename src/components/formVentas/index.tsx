@@ -4,6 +4,7 @@ import { createVenta } from "./createVenta";
 import { createVentaDetalle } from "./createVentaDetalle";
 import { useSessionStorage } from "../../utils/hook/useSessionStorage";
 import Register from "../../pages/Register";
+import { useCartStore } from "../../utils/zustand/store/useCartStore";
 
 export const FormVentas: FC<{
   clients: any;
@@ -11,6 +12,8 @@ export const FormVentas: FC<{
   totalPrice: any;
   products: any;
 }> = ({ clients, auxiliaries, totalPrice, products }) => {
+  const clearCart = useCartStore((state) => state.clearCart);
+
   const [selectedAuxiliary, setSelectedAuxiliary] = useState<
     number | string | ""
   >(0);
@@ -77,8 +80,10 @@ export const FormVentas: FC<{
       });
       console.log(ventaDetalle);
     }
+    alert("Venta registrada con exito.");
+    clearCart();
+    window.location.reload();
   };
-  console.log(filteredClients);
   return (
     <>
       <form
@@ -104,7 +109,9 @@ export const FormVentas: FC<{
           >
             Responsable de la venta:
           </label>
-          <p className="block text-gray-700 text-sm">{dataAux[0] || "Admin"}</p>
+          <p className="block text-gray-700 text-sm">
+            {storage.user.nombre_usuario || "Admin"}
+          </p>
         </div>
         {dataClient.length > 0 && (
           <div className="mb-4">
