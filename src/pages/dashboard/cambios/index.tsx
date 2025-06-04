@@ -70,97 +70,115 @@ const ListaDeCambios: React.FC = () => {
         </h1>
         {cambios.length > 0 ? (
           <ul className="space-y-4">
-            {cambios.map((cambio: any) => (
-              <li
-                key={cambio.cambio_id}
-                className="bg-white shadow rounded-md p-4"
-              >
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">
-                  Cliente: {cambio.email}
-                </h2>
-                {cambio.cambios.map((items: any) => {
-                  return (
-                    <li
-                      key={items.venta_original_id}
-                      className="bg-white shadow rounded-md p-4 mb-4"
-                    >
-                      <p className="text-gray-500 mb-1">
-                        Venta Original ID: {items.venta_original_id} <br />
-                        Fecha: {items.fecha_venta}
-                        <br />
-                        Total:$
-                        {parseFloat(items.total_venta).toLocaleString("es-CO")}
-                        <br />
-                      </p>
-                      <div className="flex justify-between items-center mb-2">
-                        <div>
-                          <h3 className="text-md font-semibold text-gray-600">
-                            Producto Original
-                          </h3>
-                          <p className="text-gray-500">
-                            ID: {items.producto_original_id}
-                          </p>
-                          <p className="text-gray-500">
-                            Nombre: {items.nombre_producto_original}
-                          </p>
-                          <p className="text-gray-500">
-                            Precio: ${" "}
-                            {parseFloat(
-                              items.precio_venta_original
-                            ).toLocaleString("es-CO")}
-                          </p>
-                          <p className="text-gray-500">
-                            Cantidad Original: {items.cantidad_original}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-md font-semibold text-gray-600">
-                            Producto Nuevo
-                          </h3>
-                          <p className="text-gray-500">
-                            ID: {items.producto_nuevo_id}
-                          </p>
-                          <p className="text-gray-500">
-                            Nombre: {items.nombre_producto_nuevo}
-                          </p>
-                          <p className="text-gray-500">
-                            Precio: ${" "}
-                            {parseFloat(
-                              items.precio_venta_nuevo
-                            ).toLocaleString("es-CO")}
-                          </p>
-                          <p className="text-gray-500">
-                            Cantidad Nueva: {items.cantidad_nueva}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="text-gray-500 mb-1">
-                        Fecha Solicitud:{" "}
-                        {new Date(items.fecha_solicitud).toLocaleString()}
-                      </p>
-                      {items.fecha_cambio && (
+            {cambios.map((cambio: any) => {
+              return (
+                <li
+                  key={cambio.cambio_id}
+                  className="bg-white shadow rounded-md p-4"
+                >
+                  <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                    Cliente: {cambio.email}
+                  </h2>
+                  {cambio.cambios.map((items: any) => {
+                    const date = new Date(items.fecha_venta);
+                    console.log("GGGG", date);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1)
+                      .toString()
+                      .padStart(2, "0"); // getMonth() es 0-indexado, por eso +1
+                    const day = date.getDate().toString().padStart(2, "0");
+
+                    // Concatenamos para formar el string deseado
+                    const formattedDate = `${year}${month}${day}`;
+
+                    return (
+                      <li
+                        key={items.venta_original_id}
+                        className="bg-white shadow rounded-md p-4 mb-4"
+                      >
                         <p className="text-gray-500 mb-1">
-                          Fecha Cambio: {items.fecha_cambio}
+                          Venta Original ID:{" "}
+                          {formattedDate + "_" + items.venta_original_id} <br />
+                          Fecha: {items.fecha_venta}
+                          <br />
+                          Total:$
+                          {parseFloat(items.total_venta).toLocaleString(
+                            "es-CO"
+                          )}
+                          <br />
                         </p>
-                      )}
-                      {items.motivo_cambio && (
+                        <div className="flex justify-between items-center mb-2">
+                          <div>
+                            <h3 className="text-md font-semibold text-gray-600">
+                              Producto Original
+                            </h3>
+                            <p className="text-gray-500">
+                              Codigo: {items.codigo_producto_original}
+                            </p>
+                            <p className="text-gray-500">
+                              Nombre: {items.nombre_producto_original}
+                            </p>
+                            <p className="text-gray-500">
+                              Precio: ${" "}
+                              {parseFloat(
+                                items.precio_venta_original
+                              ).toLocaleString("es-CO")}
+                            </p>
+                            <p className="text-gray-500">
+                              Cantidad Original: {items.cantidad_original}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-md font-semibold text-gray-600">
+                              Producto Nuevo
+                            </h3>
+                            <p className="text-gray-500">
+                              Codigo: {items.codigo_producto_nuevo}
+                            </p>
+                            <p className="text-gray-500">
+                              Nombre: {items.nombre_producto_nuevo}
+                            </p>
+                            <p className="text-gray-500">
+                              Precio: ${" "}
+                              {parseFloat(
+                                items.precio_venta_nuevo
+                              ).toLocaleString("es-CO")}
+                            </p>
+                            <p className="text-gray-500">
+                              Cantidad Nueva: {items.cantidad_nueva}
+                            </p>
+                          </div>
+                        </div>
                         <p className="text-gray-500 mb-1">
-                          Motivo del Cambio: {items.motivo_cambio}
+                          Fecha Solicitud:{" "}
+                          {new Date(items.fecha_solicitud).toLocaleString()}
                         </p>
-                      )}
-                      <p className="text-gray-500 mb-1">
-                        Estado del Cambio: {items.estado_cambio}
-                      </p>
-                      {items.observaciones && (
-                        <p className="text-gray-500">
-                          Observaciones: {items.observaciones}
+                        {items.fecha_cambio && (
+                          <p className="text-gray-500 mb-1">
+                            Fecha Cambio: {items.fecha_cambio}
+                          </p>
+                        )}
+                        {items.motivo_cambio && (
+                          <p className="text-gray-500 mb-1">
+                            Motivo del Cambio: {items.motivo_cambio}
+                          </p>
+                        )}
+                        <p className="text-gray-500 mb-1">
+                          Diferencia de cambio:{" "}
+                          {Number(items.precio_venta_nuevo) -
+                            Number(items.precio_venta_original)}
                         </p>
-                      )}
-                    </li>
-                  );
-                })}
-              </li>
-            ))}
+                        {items.observaciones && (
+                          <p className="text-gray-500">
+                            Observaciones: {items.observaciones}
+                          </p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p className="text-gray-500">No se encontraron cambios realizados.</p>

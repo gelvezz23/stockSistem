@@ -8,6 +8,7 @@ import { DateTimer } from "../../dashboard/citas/dateTimer";
 import { IconoEditar } from "../../../components/iconos/iconoEditar";
 import { IconoProceso } from "../../../components/iconos/iconoProceso";
 import { IconoReagendar } from "../../../components/iconos/iconoReagendar";
+import ProductList from "./materialList";
 
 const ListarCitasPerfil = () => {
   const { storage } = useSessionStorage("user", null);
@@ -21,7 +22,7 @@ const ListarCitasPerfil = () => {
   const [garantia, setGarantia] = useState<any>();
   const [estado, setestado] = useState<any>();
   const [descripcion, setDescripcion] = useState<any>();
-
+  const [observacion, setObservacion] = useState<any>();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [showTime, setShowTime] = useState(false);
   const [selectedTime, setSelectedTime] = useState<any>();
@@ -110,6 +111,7 @@ const ListarCitasPerfil = () => {
       cliente_id: selectedClient,
       estado,
       solucion: descripcion,
+      observacion,
     };
 
     try {
@@ -189,6 +191,9 @@ const ListarCitasPerfil = () => {
                   Solución
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  Observación
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Evidencia
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -232,6 +237,9 @@ const ListarCitasPerfil = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {cita.solucion || "-"}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {cita.observacion || "-"}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {cita.imagen_evidencia ? (
@@ -366,6 +374,7 @@ const ListarCitasPerfil = () => {
             Enviar
           </button>
         </form>
+        <ProductList />
       </Modal>
       {/** INCUMPLIMIENTO */}
       <Modal
@@ -383,51 +392,14 @@ const ListarCitasPerfil = () => {
                 htmlFor="descripcion"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Tiene Garantia (opcional)
-              </label>
-
-              <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                onChange={(e) => setGarantia(e.target.value)}
-              >
-                <option>Seleccione una opcion</option>
-                <option value="No"> No</option>
-                <option value="Si"> Si</option>
-              </select>
-            </div>
-
-            <div className="col-span-full">
-              <label
-                htmlFor="descripcion"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Estado (opcional)
-              </label>
-
-              <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                onChange={(e) => setestado(e.target.value)}
-              >
-                <option>Seleccione una opcion</option>
-                <option value="pendiente"> pendiente</option>
-                <option value="en garantia"> en garantia</option>
-                <option value="terminado"> terminado</option>
-              </select>
-            </div>
-
-            <div className="col-span-full">
-              <label
-                htmlFor="descripcion"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Solucion.
+                Observacion.
               </label>
               <textarea
                 id="descripcion"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 rows={2}
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
+                value={observacion}
+                onChange={(e) => setObservacion(e.target.value)}
               ></textarea>
             </div>
 

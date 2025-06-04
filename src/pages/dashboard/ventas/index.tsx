@@ -13,6 +13,7 @@ export const Ventas = () => {
   const [isChanging, setIsChanging] = useState(false);
   const [productsToChange, setProductsToChange] = useState<any[]>([]);
   const [availableProducts, setAvailableProducts] = useState<any[]>([]);
+  const [envios, setEnvios] = useState([]);
   const [selectedChangeProducts, setSelectedChangeProducts] = useState<
     Record<number, number | null>
   >({});
@@ -211,6 +212,31 @@ export const Ventas = () => {
     getVentas();
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACK_URL}/api/entregas`,
+          { method: "GET" }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setError(errorData.message || `error: ${response.status}`);
+          setLoading(false);
+          return;
+        }
+        const data = await response.json();
+        setEnvios(data);
+        setLoading(false);
+      } catch (err: any) {
+        setLoading(false);
+        setError(err.message || "Error desconocido al obtener cliente");
+      }
+    };
+    getData();
+  }, []);
+
   return (
     <div className="bg-gray-100 min-h-screen py-8">
       <Modal isOpen={open} onClose={() => setOpen(!open)}>
@@ -227,6 +253,9 @@ export const Ventas = () => {
         {error && <p className="error-message">{error}</p>}
         <ul className="space-y-4">
           {ventasAgrupadas.map((venta) => {
+            const isVentaEnviada = envios.some(
+              (envio: any) => envio?.venta_id === venta.venta_id
+            );
             const date = new Date(venta.detalles[0].fecha_venta);
 
             const year = date.getFullYear();
@@ -268,7 +297,8 @@ export const Ventas = () => {
                               </span>
                               <span className="font-semibold">
                                 Producto Original: {detalle.nombre_producto}{" "}
-                                (ID: {detalle.producto_id}) - $
+                                (ID: {`${formattedDate}_${detalle.producto_id}`}
+                                ) - $
                                 {parseInt(
                                   detalle.precio_unitario
                                 ).toLocaleString("es-CO")}
@@ -306,7 +336,9 @@ export const Ventas = () => {
                                         .filter(
                                           (product) =>
                                             Number(product.producto_id) !==
-                                            Number(detalle.producto_id)
+                                              Number(detalle.producto_id) &&
+                                            Number(product.precio_venta) >=
+                                              Number(detalle.precio_unitario)
                                         )
                                         .map((product: any) => (
                                           <option
@@ -407,13 +439,18 @@ export const Ventas = () => {
                             </li>
                           ))}
                         </ul>
+
                         <button
-                          className="my-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                          className={`my-2 mr-2 ${
+                            isVentaEnviada ? "bg-gray-500" : "bg-blue-500"
+                          } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
                           type="button"
+                          disabled={isVentaEnviada}
                           onClick={() => handleEnvio(venta)}
                         >
                           Enviar
                         </button>
+
                         {!isChanging ? (
                           <button
                             className="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
