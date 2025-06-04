@@ -9,12 +9,14 @@ import { IconoEditar } from "../../../components/iconos/iconoEditar";
 import { IconoProceso } from "../../../components/iconos/iconoProceso";
 import { IconoReagendar } from "../../../components/iconos/iconoReagendar";
 import ProductList from "./materialList";
+import MaterialBD from "./materialBD";
 
 const ListarCitasPerfil = () => {
   const { storage } = useSessionStorage("user", null);
   const [open, setModal] = useState(false);
   const [open2, setModal2] = useState(false);
   const [open3, setModal3] = useState(false);
+  const [open4, setModal4] = useState(false);
 
   const [citas, setCitas] = useState<any>([]);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ const ListarCitasPerfil = () => {
   const [showTime, setShowTime] = useState(false);
   const [selectedTime, setSelectedTime] = useState<any>();
   const [selectedClient, setSelectedClient] = useState<any>();
-
+  const [products, setProducts] = useState<any>();
   const fechaInicioFormateada = useCallback(() => {
     return selectedDate ? `${selectedDate} ${selectedTime}:00` : undefined;
   }, [selectedDate, selectedTime]);
@@ -145,6 +147,7 @@ const ListarCitasPerfil = () => {
 
   const handleOpenDataModal = (cita: any) => {
     setSelectedClient(cita.servicio_id);
+    setProducts(cita.producto_id);
   };
 
   return (
@@ -195,6 +198,9 @@ const ListarCitasPerfil = () => {
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Evidencia
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  Materiales
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   .
@@ -250,6 +256,17 @@ const ListarCitasPerfil = () => {
                       ) : (
                         "-"
                       )}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <span
+                        className="text-black"
+                        onClick={() => {
+                          handleOpenDataModal(cita);
+                          setModal4(!open4);
+                        }}
+                      >
+                        ver informacion
+                      </span>
                     </td>
                     <td className="flex flex-col h-[7rem] w-full gap-2 px-2 py-5 border-b border-gray-200 bg-white text-sm">
                       {compareFechaCitas(cita) ? (
@@ -374,7 +391,7 @@ const ListarCitasPerfil = () => {
             Enviar
           </button>
         </form>
-        <ProductList />
+        <ProductList id={selectedClient} />
       </Modal>
       {/** INCUMPLIMIENTO */}
       <Modal
@@ -471,6 +488,11 @@ const ListarCitasPerfil = () => {
             Enviar
           </button>
         </form>
+      </Modal>
+
+      {/** MATERIALEs */}
+      <Modal isOpen={open4} onClose={() => setModal4(!open4)}>
+        <MaterialBD products={products} />
       </Modal>
     </div>
   );

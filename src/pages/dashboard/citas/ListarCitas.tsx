@@ -6,12 +6,15 @@ import { IconoEditar } from "../../../components/iconos/iconoEditar";
 import { IconoReagendar } from "../../../components/iconos/iconoReagendar";
 import { IconoProceso } from "../../../components/iconos/iconoProceso";
 import { IconoCancelar } from "../../../components/iconos/iconoCancelar";
+import MaterialBD from "../../perfil/tecnico/materialBD";
 
 const ListarCitas = () => {
   const [citas, setCitas] = useState<any>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [open, setModal] = useState(false);
+  const [open4, setModal4] = useState(false);
+
   const [open2, setModal2] = useState(false);
   const [direccion, setDireccion] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -19,6 +22,8 @@ const ListarCitas = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedClient, setSelectedClient] = useState();
   const [garantia, setGarantia] = useState<any>();
+  const [products, setProducts] = useState<any>();
+
   const [estado, setestado] = useState<any>();
   const [descripcion, setDescripcion] = useState<any>();
   const [direccionActual, setDireccionActual] = useState();
@@ -184,6 +189,7 @@ const ListarCitas = () => {
   const handleOpenDataModal = (cita: any) => {
     setSelectedClient(cita.servicio_id);
     setDireccionActual(cita.direccion_servicio);
+    setProducts(cita.producto_id);
   };
 
   return (
@@ -234,6 +240,9 @@ const ListarCitas = () => {
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   Evidencia
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  Materiales
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   .
@@ -290,6 +299,17 @@ const ListarCitas = () => {
                       ) : (
                         "-"
                       )}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <span
+                        className="text-black"
+                        onClick={() => {
+                          handleOpenDataModal(cita);
+                          setModal4(!open4);
+                        }}
+                      >
+                        ver informacion
+                      </span>
                     </td>
 
                     <td className="px-2 py-5 border-b h-[7rem] w-[8rem] border-gray-200 bg-white text-sm flex flex-col gap-2">
@@ -496,6 +516,11 @@ const ListarCitas = () => {
             Enviar
           </button>
         </form>
+      </Modal>
+
+      {/** MATERIALEs */}
+      <Modal isOpen={open4} onClose={() => setModal4(!open4)}>
+        <MaterialBD products={products} />
       </Modal>
     </div>
   );

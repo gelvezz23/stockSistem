@@ -21,6 +21,7 @@ import ListarCitas from "../pages/dashboard/citas/ListarCitas";
 import ListarCitasPerfil from "../pages/perfil/tecnico/agenda";
 import { Tecnico } from "../pages/perfil/tecnico";
 import Entregas from "../pages/dashboard/entregas";
+import CompanyRegistrationForm from "../pages/dashboard/empresa";
 
 export const ProtectedRoute = () => {
   const { storage } = useSessionStorage("user", null);
@@ -94,7 +95,11 @@ export const routes = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <LowStockProductsList />,
+                element: (
+                  <>
+                    <CompanyRegistrationForm /> <br /> <LowStockProductsList />
+                  </>
+                ),
               },
               {
                 path: "products/create",
