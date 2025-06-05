@@ -6,7 +6,6 @@ import { FormsClient } from "../dashboard/usersList/form";
 import Modal from "../../components/Modal";
 import FormServicioTecnico from "../../components/FormServicioTecnico";
 import { IconoProceso } from "../../components/iconos/iconoProceso";
-import { IconoReagendar } from "../../components/iconos/iconoReagendar";
 import { DateTimer } from "../dashboard/citas/dateTimer";
 import { IconoCancelar } from "../../components/iconos/iconoCancelar";
 
@@ -28,8 +27,7 @@ export const Cliente = () => {
   const [errorData, setError] = useState<string | null>(null);
   const [loadingData, setLoading] = useState(true); // Initialize loading to true
   const [citas, setCitas] = useState<any>([]);
-  const [selectedClient, setSelectedClient] = useState<any>();
-  const [_products, setProducts] = useState<any>();
+  const [selectedClient] = useState<any>();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [selectedTime, setSelectedTime] = useState<any>();
   const [showTime, setShowTime] = useState(false);
@@ -174,10 +172,6 @@ export const Cliente = () => {
     return false;
   };
 
-  const handleOpenDataModal = (cita: any) => {
-    setSelectedClient(cita.servicio_id);
-    setProducts(cita.producto_id);
-  };
   const handleSubmitEdit = async (e: any) => {
     e.preventDefault();
     const body = {
