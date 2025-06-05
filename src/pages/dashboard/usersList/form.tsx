@@ -56,6 +56,34 @@ export const FormsClient = ({
       setLoading(false);
       setError(err.message || "Error desconocido al crear cliente");
     }
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACK_URL}/api/clientes/usuarios`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(clientsState),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(
+          errorData.message || `Error al crear cliente: ${response.status}`
+        );
+        setLoading(false);
+        return;
+      }
+
+      setLoading(false);
+      window.location.reload();
+    } catch (err: any) {
+      setLoading(false);
+      setError(err.message || "Error desconocido al crear cliente");
+    }
   };
 
   useEffect(() => {
