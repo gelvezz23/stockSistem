@@ -259,7 +259,7 @@ const ListarCitasPerfil = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <span
-                        className="text-black"
+                        className="text-black cursor-pointer"
                         onClick={() => {
                           handleOpenDataModal(cita);
                           setModal4(!open4);
@@ -268,57 +268,63 @@ const ListarCitasPerfil = () => {
                         ver informacion
                       </span>
                     </td>
-                    <td className="flex flex-col h-[7rem] w-full gap-2 px-2 py-5 border-b border-gray-200 bg-white text-sm">
-                      {compareFechaCitas(cita) ? (
-                        <>
-                          <button
-                            className="flex items-center "
-                            onClick={() => {
-                              alert(
-                                "No puede editar ni cancelar esta cita. Ya esta en proceso."
-                              );
-                            }}
-                          >
-                            <IconoProceso />
-                            En proceso
-                          </button>
+                    {cita.estado === "terminado" ? (
+                      <td className="flex flex-col items-center justify-center h-[7rem] w-full gap-2 px-2 py-5 border-b border-gray-200 bg-white text-sm">
+                        Terminado
+                      </td>
+                    ) : (
+                      <td className="flex flex-col h-[7rem] w-full gap-2 px-2 py-5 border-b border-gray-200 bg-white text-sm">
+                        {compareFechaCitas(cita) ? (
+                          <>
+                            <button
+                              className="flex items-center "
+                              onClick={() => {
+                                alert(
+                                  "No puede editar ni cancelar esta cita. Ya esta en proceso."
+                                );
+                              }}
+                            >
+                              <IconoProceso />
+                              En proceso
+                            </button>
 
-                          <button
-                            className="flex items-center"
-                            onClick={() => {
-                              handleOpenDataModal(cita);
-                              setModal3(!open3);
-                            }}
-                          >
-                            <IconoReagendar /> reagendar
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <span
-                            className="underline cursor-pointer flex items-center"
-                            onClick={() => {
-                              handleOpenDataModal(cita);
-                              setModal(!open);
-                            }}
-                          >
-                            <IconoEditar />
-                            Ejecutar
-                          </span>
+                            <button
+                              className="flex items-center"
+                              onClick={() => {
+                                handleOpenDataModal(cita);
+                                setModal3(!open3);
+                              }}
+                            >
+                              <IconoReagendar /> reagendar
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <span
+                              className="underline cursor-pointer flex items-center"
+                              onClick={() => {
+                                handleOpenDataModal(cita);
+                                setModal(!open);
+                              }}
+                            >
+                              <IconoEditar />
+                              Ejecutar
+                            </span>
 
-                          <span
-                            className="underline cursor-pointer flex items-center w-[12rem]"
-                            onClick={() => {
-                              handleOpenDataModal(cita);
-                              setModal2(!open2);
-                            }}
-                          >
-                            <IconoEditar />
-                            registar incumplimiento
-                          </span>
-                        </>
-                      )}
-                    </td>
+                            <span
+                              className="underline cursor-pointer flex items-center w-[12rem]"
+                              onClick={() => {
+                                handleOpenDataModal(cita);
+                                setModal2(!open2);
+                              }}
+                            >
+                              <IconoEditar />
+                              registar incumplimiento
+                            </span>
+                          </>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 </>
               ))}

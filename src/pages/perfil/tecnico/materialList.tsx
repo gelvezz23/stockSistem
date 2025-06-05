@@ -134,7 +134,7 @@ function ProductList({ id }: { id: any }) {
   );
 
   return (
-    <div className="container mx-auto p-4 flex flex-col md:flex-row gap-8 text-black">
+    <div className="container mx-auto p-4 flex flex-col gap-8 text-black">
       {/* Sección de Lista de Productos Disponibles */}
       <div className="flex-1 bg-gray-50 rounded-lg shadow-xl border border-gray-200 p-4">
         <h5 className="text-xl font-extrabold text-gray-800 text-center mb-6">
@@ -175,7 +175,7 @@ function ProductList({ id }: { id: any }) {
                 ) => (
                   <li
                     key={product.codigo}
-                    className="flex items-center justify-between p-4 sm:p-5"
+                    className="flex items-start justify-between p-4 sm:p-5"
                   >
                     <div className="flex-grow">
                       <p className="text-sm text-gray-500">
@@ -192,7 +192,7 @@ function ProductList({ id }: { id: any }) {
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="px-4 py-2 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-all duration-200 ease-in-out"
+                        className="px-2 py-2 text-[1rem] bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-all duration-200 ease-in-out"
                       >
                         Agregar material
                       </button>
