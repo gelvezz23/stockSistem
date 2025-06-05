@@ -8,6 +8,7 @@ import FormServicioTecnico from "../../components/FormServicioTecnico";
 import { IconoProceso } from "../../components/iconos/iconoProceso";
 import { IconoReagendar } from "../../components/iconos/iconoReagendar";
 import { DateTimer } from "../dashboard/citas/dateTimer";
+import { IconoCancelar } from "../../components/iconos/iconoCancelar";
 
 export const Cliente = () => {
   const { storage } = useSessionStorage("user", null);
@@ -212,6 +213,46 @@ export const Cliente = () => {
       alert(`Error al actualizar el servicio: ${error.message}`);
     }
   };
+
+  const handleDeleteCita = (id: any) => {
+    const estaSeguro = confirm(
+      `¿Estás seguro de que deseas eliminar el servicio técnico ? Esta acción no se puede deshacer.`
+    );
+
+    if (!estaSeguro) {
+      console.log("Eliminación cancelada por el usuario.");
+      return; // Sale de la función si el usuario cancela
+    }
+
+    fetch(`${import.meta.env.VITE_BACK_URL}/api/citas/delete/${id}`, {
+      method: "DELETE", // Método HTTP para eliminar
+      headers: {
+        "Content-Type": "application/json", // Aunque no envíes un body, es buena práctica incluirlo
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((err) => {
+            throw new Error(err.message || "Error al eliminar el servicio.");
+          });
+        }
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json();
+        } else {
+          return {};
+        }
+      })
+      .then((data) => {
+        console.log("Respuesta del servidor:", data);
+        alert("¡Servicio eliminado correctamente!");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Hubo un error al eliminar el servicio:", error);
+        alert("Error al eliminar el servicio: " + error.message);
+      });
+  };
   return (
     <div className="bg-gray-100 min-h-screen py-8">
       <Modal isOpen={viewModalEdit} onClose={handleEditClickEdit}>
@@ -385,7 +426,7 @@ export const Cliente = () => {
                           )}
                         </td>
 
-                        <td className="flex flex-col h-[7rem] w-full gap-2 px-2 py-5 border-b border-gray-200 bg-white text-sm">
+                        <td className="flex flex-col h-[7rem] w-[10rem] items-start justify-center gap-2 px-2 py-5 border-b border-gray-200 bg-white text-sm">
                           {compareFechaCitas(cita) ? (
                             <>
                               <button
@@ -399,27 +440,26 @@ export const Cliente = () => {
                                 <IconoProceso />
                                 En proceso
                               </button>
-
+                            </>
+                          ) : (
+                            <>
                               <button
                                 className="flex items-center"
                                 onClick={() => {
-                                  handleOpenDataModal(cita);
-                                  setModal3(!open3);
+                                  alert("confirmado.");
                                 }}
                               >
-                                <IconoReagendar /> reagendar
+                                <IconoProceso /> confirmar
+                              </button>
+                              <button
+                                className="flex items-center"
+                                onClick={() => {
+                                  handleDeleteCita(cita.servicio_id);
+                                }}
+                              >
+                                <IconoCancelar /> cancelar
                               </button>
                             </>
-                          ) : (
-                            <button
-                              className="flex items-center"
-                              onClick={() => {
-                                handleOpenDataModal(cita);
-                                setModal3(!open3);
-                              }}
-                            >
-                              <IconoReagendar /> reagendar
-                            </button>
                           )}
                         </td>
                       </tr>
